@@ -1,0 +1,185 @@
+{
+  "main": {
+    "id": "2dcd2e970454a39e",
+    "type": "split",
+    "children": [
+      {
+        "id": "0e765e8b30394f79",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "825b7776c5f37fb0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Ansible Molecule using Vagrant & Virtualbox"
+            }
+          }
+        ]
+      },
+      {
+        "id": "4e4e8bec33c564cd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5c2cb743e2b5fa1e",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5633ea1b6eda247e",
+    "type": "split",
+    "children": [
+      {
+        "id": "30887d350a06ddc9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "38064afc1fb26532",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "dd394052d8ba4546",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "2e3e957ec113324e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "03ecc735e5dc9d30",
+    "type": "split",
+    "children": [
+      {
+        "id": "603f759708ed5332",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6d875d204cafe45b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Ansible Molecule using Vagrant & Virtualbox"
+            }
+          },
+          {
+            "id": "644ce6a7d399f647",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Ansible Molecule using Vagrant & Virtualbox"
+            }
+          },
+          {
+            "id": "52fd8ac549a55cca",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "aa42c2e68174614f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Ansible Molecule using Vagrant & Virtualbox"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "825b7776c5f37fb0",
+  "lastOpenFiles": [
+    "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md"
+  ]
+}
