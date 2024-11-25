@@ -30,6 +30,10 @@ python3 -m venv ~/.venv/ansible_env
 source ~/.venv/ansible_env/bin/activate
 ```
 
+* requires python >=3.10
+* install `python3.11` on rhel systems like almalinux9
+* install pip by running `python3.11 -m ensurepip`
+
 Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
 ```code
@@ -111,15 +115,33 @@ Just to provide you a quick overview:
 
 First we need to setup a platform molecule should use.
 As the title suggests we will go for vagrant with Virtualbox as a provider in this example.
+First we need to add a role name to the meta file otherwise molecule will fail to create an instance. This happens due to a linting process running first.
+```code
+INFO     default scenario test matrix: dependency, create, prepare
+INFO     Performing prerun with role_name_check=0...
+ERROR    Computed fully qualified role name of sample does not follow current galaxy requirements.
+Please edit meta/main.yml and assure we can correctly determine full role name:
+
+galaxy_info:
+role_name: my_name  # if absent directory name hosting role is used instead
+namespace: my_galaxy_namespace  # if absent, author is used instead
+```
 
 * default warning `WARNING  Skipping, prepare playbook not configured.` - explain non-configured 
 * List of drivers `molecule drivers`
 * List instances `molecule list`
-* @@TODO check whats the default here
+* default driver is [delegated](https://ansible.readthedocs.io/projects/molecule/configuration/#driver)
 * 
 
+When just running `molecule create` from the roles root directory and afterwards running `molecule list`you will get something like this (removed a few blanks to make it fit):
+```code
+	         ╷           ╷                ╷             ╷       ╷        Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────╴
+  instance   │ default   │ ansible        │ default     │ true  │ false      
+             ╵           ╵                ╵             ╵       ╵            
+```
 
-
+Now we know it works but this default instance isn't too useful so run `molecule destroy` to delete it again.
+Next edit the molecule.yml file at `<rolen-name>/molecule/default/molecule.yml`
 ## Vagrant
 Explain what gets saved where and how does the ephemeral directory work
 
