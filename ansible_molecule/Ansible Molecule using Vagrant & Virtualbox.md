@@ -47,6 +47,7 @@ And run `python -m pip install -r requirements.txt` to install all of them.
 
 Additionally Virtualbox and Vagrant are required to follow along.
 See the following table for download pages and version used for the following examples.
+@@ TODO explain briefly what vagrant is - link to docs
 
 | Tool       | Download Page                                                       | Version used here |
 | ---------- | ------------------------------------------------------------------- | ----------------- |
@@ -98,27 +99,11 @@ This will create a molecule directory inside the role directory containing a bun
 ```
 
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)
-Just to provide you a quick overview:
 
-| Directory | Puprose                                                           |
-| --------- | ----------------------------------------------------------------- |
-| defaults  | Any kind of variables which are supposed to be adjusted           |
-| files     | Files to copy over to the remote host                             |
-| handlers  | Handlers to run at the end of a play                              |
-| meta      | Meta for [ansible galaxy](https://galaxy.ansible.com)             |
-| molecule  | Molecule testing setup                                            |
-| tasks     | The Logic to run this role                                        |
-| templates | Usually jinja2 template scripts to template to the remote host    |
-| tests     | Files containing tests - can be used in combination with molecule |
-| vars      | Variables required for the role - like names of dependencies      |
 ## How-To-Example
 
-First we need to setup a platform molecule should use.
-As the title suggests we will go for vagrant with Virtualbox as a provider in this example.
-First we need to add a role name to the meta file otherwise molecule will fail to create an instance. This happens due to a linting process running first.
+Creating a molecule instance is done by running `molecule create` if you do that right away from the roles root directory you will most likely encounter the following error:
 ```code
-INFO     default scenario test matrix: dependency, create, prepare
-INFO     Performing prerun with role_name_check=0...
 ERROR    Computed fully qualified role name of sample does not follow current galaxy requirements.
 Please edit meta/main.yml and assure we can correctly determine full role name:
 
@@ -126,19 +111,29 @@ galaxy_info:
 role_name: my_name  # if absent directory name hosting role is used instead
 namespace: my_galaxy_namespace  # if absent, author is used instead
 ```
+This happens due to molecule running a [role name-check](https://ansible.readthedocs.io/projects/molecule/configuration/#role-name-check) by default.
+As stated in the documentation you can either disable the check or just add the `role_name` and `namespace` to the `meta/main.yml` file.
 
-* default warning `WARNING  Skipping, prepare playbook not configured.` - explain non-configured 
-* List of drivers `molecule drivers`
-* List instances `molecule list`
-* default driver is [delegated](https://ansible.readthedocs.io/projects/molecule/configuration/#driver)
-* 
-
-When just running `molecule create` from the roles root directory and afterwards running `molecule list`you will get something like this (removed a few blanks to make it fit):
+Now running `molecule create` should, while throwing a bunch of warnings, already work.
+Running `moelcule list` should now show this table.
 ```code
 	         ╷           ╷                ╷             ╷       ╷        Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────╴
   instance   │ default   │ ansible        │ default     │ true  │ false      
              ╵           ╵                ╵             ╵       ╵            
 ```
+
+This will create a default instance using the [delegated driver](https://ansible.readthedocs.io/projects/molecule/configuration/#delegated), which is just called "default".
+
+As the title suggests we will go for vagrant with Virtualbox as a provider in this example.
+So run `molecule destroy` to remove that default instance again.
+If you run `molecule drivers` you should see a list of drivers including `vagrant`.
+
+Now edit the molecule config file `molecule/default/molecule.yml` and add vagrant and Virtualbox like this:
+
+
+
+When just running `molecule create` from the roles root directory and afterwards running `molecule list`you will get something like this (removed a few blanks to make it fit):
+
 
 Now we know it works but this default instance isn't too useful so run `molecule destroy` to delete it again.
 Next edit the molecule.yml file at `<rolen-name>/molecule/default/molecule.yml`
