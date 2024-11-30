@@ -8,26 +8,25 @@ tags:
 # Getting started with Molecule
 ## Intro
 
-After reading through a bunch of Ansible molecule setup guides myself I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [[#Prepare development environment]]
+After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [[#Prepare development environment]]
 So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by vagrant using VirtualBox as provider.
 This was tested last on @@TODO insert date and works for the versions mentioned in [[#Requirements]]
 
 ## Requirements
 
 First install a bunch of python packages like Ansible, Molecule and its vagrant plugin.
-For this to work you will need python installed.
+For this to work you will need python >= 3.10 installed.
 The docker python package also gets installed here cause `molecule reset` seems to fail when it's not installed.
 This step requires **pip** to be installed.
 
 > [!tip] Additionally I recommend creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first.
 
-Might need to install venv first
+On Debian-based systems like Ubuntu you might need to install python-venv first.
 `sudo apt-get install python3.10-venv`
 
 Create a python virtual environment and activate it from your terminal like this:
-```bash
-python3 -m venv ~/.venv/ansible_env
-source ~/.venv/ansible_env/bin/activate
+```code
+{{CODE:Create environment}}
 ```
 
 * requires python >=3.10
@@ -37,13 +36,13 @@ source ~/.venv/ansible_env/bin/activate
 Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
 ```code
-ansible==10.6.0
-molecule==24.9.0
-molecule-plugins[vagrant]
-docker==7.1.0
+{{CODE:Write requirements}}
 ```
 
-And run `python -m pip install -r requirements.txt` to install all of them.
+And run you can upgrade pip (just to be sure) and install the requirements
+```code
+{{CODE:Install requirements}}
+```
 
 Additionally Virtualbox and Vagrant are required to follow along.
 See the following table for download pages and version used for the following examples.
@@ -59,18 +58,16 @@ See the following table for download pages and version used for the following ex
 While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`. 
 This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/molecule/releases/tag/v6.0.0) - it was removed intentional to get rid of the [Ansible-Galaxy](https://github.com/ansible/galaxy) dependency.
 
-> [!info]- Code first, explanation second
+> [!info]- Code first, explanation second @@TODO move somewhere else
 > I for any code examples in this article I'll provide the code frist and explain it afterwards.
 
-```bash
-ansible-galaxy role init <role_name>
-cd <role_name>
-molecule init scenario <scenario name>
+```code
+{{CODE:Setup role and molecule scenario}}
 ```
 
-Here we start by creating a new role structure by running `ansible-galaxy role init <role_name>` , change into Ansible role directory and initialize a molecule scenario using `molecule init scenario <scenario name>`.
+Here we start by creating a new role structure, change into Ansible role directory and initialize a molecule scenario using `molecule init `.
 For now I'll just go with the *default* scenario to keep it simple.
-This will create a molecule directory inside the role directory containing a bunch of default .yml files.
+Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
 ```code
 📦sample_role  

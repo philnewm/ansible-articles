@@ -6,7 +6,7 @@
       {
         "id": "0e765e8b30394f79",
         "type": "tabs",
-        "dimension": 55.38379530916845,
+        "dimension": 64.74411047928513,
         "children": [
           {
             "id": "825b7776c5f37fb0",
@@ -27,7 +27,7 @@
       {
         "id": "4e4e8bec33c564cd",
         "type": "tabs",
-        "dimension": 44.61620469083156,
+        "dimension": 35.25588952071487,
         "children": [
           {
             "id": "5c2cb743e2b5fa1e",
@@ -127,8 +127,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "03ecc735e5dc9d30",
@@ -189,11 +188,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "Outline of Ansible Molecule using Vagrant & Virtualbox"
+              "title": "Outline"
             }
           },
           {
@@ -207,11 +204,12 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -225,7 +223,7 @@
       "terminal:Open terminal": false
     }
   },
-  "active": "825b7776c5f37fb0",
+  "active": "5c2cb743e2b5fa1e",
   "lastOpenFiles": [
     "ansible_molecule/Ansible Molecule using Vagrant & Virtualbox.md"
   ]
