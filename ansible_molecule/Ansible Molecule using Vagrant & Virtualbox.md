@@ -89,7 +89,7 @@ See the following table for download pages and version used for the following ex
 title: "Install commands on debian-based systems"
 link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
 start: 53
-end: "+5"
+end: "+3"
 language: shell
 fold: true
 ln: true
@@ -111,14 +111,14 @@ This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/
 ```reference
 title: "Setup role and molecule scenario"
 link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
-start: 75
+start: 73
 end: "+2"
 language: shell
 fold: true
 ln: true
 ```
 
-Here we start by creating a new role structure, change into Ansible role directory and initialize a molecule scenario using `molecule init `.
+Here we start by creating a new role structure, change into Ansible role directory and initialize a molecule scenario using `molecule init scenario`.
 For now I'll just go with the *default* scenario to keep it simple.
 Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
