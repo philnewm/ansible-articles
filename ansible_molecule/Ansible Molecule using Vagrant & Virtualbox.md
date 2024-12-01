@@ -18,15 +18,31 @@ First install a bunch of python packages like Ansible, Molecule and its vagrant 
 For this to work you will need python >= 3.10 installed.
 The docker python package also gets installed here cause `molecule reset` seems to fail when it's not installed.
 This step requires **pip** to be installed.
+* Virtualization enabled - due to running virtual machines from molecule
 
 > [!tip] Additionally I recommend creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first.
 
 On Debian-based systems like Ubuntu you might need to install python-venv first.
-`sudo apt-get install python3.10-venv`
+```reference
+title: "Install virtual environment package"
+link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+start: 29
+end: "+0"
+language: shell
+fold: true
+ln: true
+```
 
 Create a python virtual environment and activate it from your terminal like this:
-```code
-{{CODE:Create environment}}
+Create a `requirements.txt` file containing these lines:
+```reference
+title: "Create virtual environment"
+link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+start: 33
+end: "+1"
+language: shell
+fold: true
+ln: true
 ```
 
 * requires python >=3.10
@@ -35,13 +51,29 @@ Create a python virtual environment and activate it from your terminal like this
 
 Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
-```code
-{{CODE:Write requirements}}
+```reference
+title: "Write requirements to file"
+link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+start: 38
+end: "+6"
+language: shell
+fold: true
+ln: true
 ```
 
+> [!tip]- docker python packages
+> Installing the docker python package is only necessary due to a bug [#32540](https://github.com/ansible/molecule/issues/2540) in molecule plugins.
+> A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far. 
+
 And run you can upgrade pip (just to be sure) and install the requirements
-```code
-{{CODE:Install requirements}}
+```reference
+title: "Install commands on debian-based systems"
+link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+start: 47
+end: "+1"
+language: shell
+fold: true
+ln: true
 ```
 
 Additionally Virtualbox and Vagrant are required to follow along.
@@ -52,8 +84,23 @@ See the following table for download pages and version used for the following ex
 | ---------- | ------------------------------------------------------------------- | ----------------- |
 | Virtualbox | [Installers](https://www.virtualbox.org/wiki/Downloads)             | 7.1.4             |
 | Vagrant    | [Install commands](https://developer.hashicorp.com/vagrant/install) | 2.4.3             |
- 
-# Prepare development environment
+
+```reference
+title: "Install commands on debian-based systems"
+link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+start: 53
+end: "+5"
+language: shell
+fold: true
+ln: true
+```
+
+```lang:bash fold:true ln:true title:"Install commands on redhat-based systems"
+wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | rpm --import oracle_vbox_2016.asc
+sudo dnf update
+sudo dnf install virtualbox-7.1 -y
+```
+## Prepare development environment
 
 While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`. 
 This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/molecule/releases/tag/v6.0.0) - it was removed intentional to get rid of the [Ansible-Galaxy](https://github.com/ansible/galaxy) dependency.
@@ -61,8 +108,14 @@ This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/
 > [!info]- Code first, explanation second @@TODO move somewhere else
 > I for any code examples in this article I'll provide the code frist and explain it afterwards.
 
-```code
-{{CODE:Setup role and molecule scenario}}
+```reference
+title: "Setup role and molecule scenario"
+link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+start: 75
+end: "+2"
+language: shell
+fold: true
+ln: true
 ```
 
 Here we start by creating a new role structure, change into Ansible role directory and initialize a molecule scenario using `molecule init `.
@@ -112,22 +165,36 @@ This happens due to molecule running a [role name-check](https://ansible.readthe
 As stated in the documentation you can either disable the check or just add the `role_name` and `namespace` to the `meta/main.yml` file.
 
 Now running `molecule create` should, while throwing a bunch of warnings, already work.
-Running `moelcule list` should now show this table.
+Running `molecule list` should now show this table.
 ```code
-	         ╷           ╷                ╷             ╷       ╷        Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────╴
-  instance   │ default   │ ansible        │ default     │ true  │ false      
-             ╵           ╵                ╵             ╵       ╵            
+	         ╷           ╷                ╷             ╷       ╷        Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
+  instance   │ default   │ ansible        │ default     │ true  │ false     
+             ╵           ╵                ╵             ╵       ╵           
 ```
 
 This will create a default instance using the [delegated driver](https://ansible.readthedocs.io/projects/molecule/configuration/#delegated), which is just called "default".
-
 As the title suggests we will go for vagrant with Virtualbox as a provider in this example.
 So run `molecule destroy` to remove that default instance again.
+Then try running `molecule reset` to reset or rather delete the scenario cache. 
+
+> [!warning]- This might result in a python traceback 
+> Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
+> Happen e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
+
 If you run `molecule drivers` you should see a list of drivers including `vagrant`.
+```bash
+molecule init scenario default --driver-name vagrant --provisioner-name ansible
+cp ~/.venv/ansible_env/lib/python3.11/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/
+@@TODO Update molecule.yml
+molecule create
+```
+
+Now we initialize a new scenario with the some explicit parameters to use vagrant
+Accessign an instance is supposed to be done by running molecule
 
 Now edit the molecule config file `molecule/default/molecule.yml` and add vagrant and Virtualbox like this:
 
-
+@@TODO might need manual instance deletion otherwise stuck on docker traceback
 
 When just running `molecule create` from the roles root directory and afterwards running `molecule list`you will get something like this (removed a few blanks to make it fit):
 
