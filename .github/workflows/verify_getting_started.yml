@@ -26,7 +26,7 @@ jobs:
 
       - name: Install ubuntu dependencies
         run: |
-          sudo apt-get install python3.10-venv
+          sudo apt-get install python3.10-venv -y
 
       - name: Create environment
         run: |
@@ -39,8 +39,9 @@ jobs:
 
       - name: Install requirements
         run: |
-          python3.10 -m pip install --upgrade pip
-          python3.10 -m pip install -r requirements.txt
+          source ~/.venv/ansible_env/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
 
       - name: Install Virtualbox 7.1.4
         run: |
@@ -64,6 +65,7 @@ jobs:
 
       - name: Setup role and molecule scenario
         run: |
+          source ~/.venv/ansible_env/bin/activate
           ansible-galaxy role init example
           cd example
           molecule init scenario
@@ -80,21 +82,25 @@ jobs:
 
       - name: Create default instance
         run: |
+          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule create
 
       - name: Verify default instance
         run: |
+          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule list
 
       - name: Destroy test instance
         run: |
+          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule destroy
 
       - name: Reset scenario
         run: |
+          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule reset
 
@@ -110,6 +116,7 @@ jobs:
 
       - name: initialize specific scenario
         run: |
+          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule init scenario default --driver-name vagrant --provisioner-name ansible
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
@@ -118,6 +125,7 @@ jobs:
 
       - name: Verify vagrant instance
         run: |
+          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule list
 

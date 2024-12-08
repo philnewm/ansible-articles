@@ -20,3 +20,8 @@
 * Research markdown support and features per blogging host site
 * RnD if obsidian callout like feature exists on other services too
 * Streamline Blog structure
+
+## Github Actions
+
+* Reset directory for each step
+* 
