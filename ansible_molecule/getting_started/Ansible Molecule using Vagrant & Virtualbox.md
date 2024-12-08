@@ -53,7 +53,7 @@ Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
 ```reference
 title: "requirements.txt"
-file: ./ansible_molecule/molecule_setup/requirements.txt
+file: ./ansible_molecule/getting_started/requirements.txt
 language: shell
 fold: true
 ln: true
@@ -185,11 +185,10 @@ If you run `molecule drivers` you should see a list of installed drivers includi
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
 ### Vagrant Instance
-**Code example**
 
 ```reference
 title: "requirements.txt"
-file: ./ansible_molecule/molecule_setup/molecule.yml
+file: ./ansible_molecule/getting_started/molecule.yml
 language: yaml
 fold: true
 ln: true

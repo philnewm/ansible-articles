@@ -70,6 +70,7 @@ jobs:
 
       - name: Create default instance
         run: |
+          echo $(pwd)
           molecule create
 
       - name: Verify default instance
