@@ -36,6 +36,7 @@ jobs:
       - name: Install requirements
         run: |
           python3.10 -m pip install --upgrade pip
+          echo $(pwd)
           python3.10 -m pip install -r ./ansible_molecule/molecule_setup/requirements.txt
 
 
