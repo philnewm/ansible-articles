@@ -68,6 +68,15 @@ jobs:
           cd example
           molecule init scenario
 
+      - name: Install yq
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+
+      - name: Add role-name
+        run: |
+          yq e '.galaxy_info.role_name = "example"' -i meta/main.yml
+          yq e '.galaxy_info.namespace = "example_namespace"' -i meta/main.yml
+
       - name: Create default instance
         run: |
           cd example
