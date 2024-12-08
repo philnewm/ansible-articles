@@ -74,6 +74,7 @@ jobs:
 
       - name: Add role-name
         run: |
+          cd example
           yq e '.galaxy_info.role_name = "example"' -i meta/main.yml
           yq e '.galaxy_info.namespace = "example_namespace"' -i meta/main.yml
 
