@@ -37,7 +37,7 @@ jobs:
         run: |
           python3.10 -m pip install --upgrade pip
           echo $(pwd)
-          python3.10 -m pip install -r ./ansible_molecule/molecule_setup/requirements.txt
+          python3.10 -m pip install -r ansible_molecule/getting_started/molecule.yml
 
 
       - name: Install Virtualbox 7.1.4
