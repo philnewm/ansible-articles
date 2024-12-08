@@ -70,19 +70,22 @@ jobs:
 
       - name: Create default instance
         run: |
-          echo $(pwd)
+          cd example
           molecule create
 
       - name: Verify default instance
         run: |
+          cd example
           molecule list
 
       - name: Destroy test instance
         run: |
+          cd example
           molecule destroy
 
       - name: Reset scenario
         run: |
+          cd example
           molecule reset
 
 ...
