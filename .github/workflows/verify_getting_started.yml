@@ -31,7 +31,6 @@ jobs:
       - name: Create environment
         run: |
           python3.10 -m venv ~/.venv/ansible_env
-          source ~/.venv/ansible_env/bin/activate
 
       - name: Get requirements
         run: |
@@ -42,6 +41,12 @@ jobs:
           source ~/.venv/ansible_env/bin/activate
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+
+      - name: Ensure global venv for this workflow
+        run: |
+          source ~/.venv/ansible_env/bin/activate
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
       - name: Install Virtualbox 7.1.4
         run: |
@@ -65,7 +70,6 @@ jobs:
 
       - name: Setup role and molecule scenario
         run: |
-          source ~/.venv/ansible_env/bin/activate
           ansible-galaxy role init example
           cd example
           molecule init scenario
@@ -76,57 +80,51 @@ jobs:
 
       - name: Add role-name
         run: |
-          cd example
           yq e '.galaxy_info.role_name = "example"' -i meta/main.yml
           yq e '.galaxy_info.namespace = "example_namespace"' -i meta/main.yml
+        working-directory: ./example
 
       - name: Create default instance
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          cd example
           molecule create
+        working-directory: ./example
 
       - name: Verify default instance
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          cd example
           molecule list
+        working-directory: ./example
 
       - name: Destroy test instance
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          cd example
           molecule destroy
+        working-directory: ./example
 
       - name: Reset scenario
         run: |
-          source ~/.venv/ansible_env/bin/activate
           cd example
           molecule reset
 
       - name: Clean molecule scenario
         run: |
-          cd example
           rm -Rf molecule
+        working-directory: ./example
 
       - name: Get molecule file
         run: |
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
-          mv molecule.yml example/molecule.yml
+        working-directory: ./example
 
       - name: initialize specific scenario
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          cd example
           molecule init scenario default --driver-name vagrant --provisioner-name ansible
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
           cp molecule.yml molecule/default/molecule.yml
           molecule create
+        working-directory: ./example
 
       - name: Verify vagrant instance
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          cd example
           molecule list
+        working-directory: ./example
 
 ...
