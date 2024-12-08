@@ -24,4 +24,11 @@
 ## Github Actions
 
 * Reset directory for each step
-* 
+* Set python [virtual environment globally](https://adamj.eu/tech/2023/11/02/github-actions-faster-python-virtual-environments/) for a job
+* Set working directory + shell per step [source](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/setting-a-default-shell-and-working-directory)
+```yaml
+defaults:
+  run:
+    shell: bash
+    working-directory: ./scripts
+```
