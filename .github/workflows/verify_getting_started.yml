@@ -98,4 +98,27 @@ jobs:
           cd example
           molecule reset
 
+      - name: Clean molecule scenario
+        run: |
+          cd example
+          rm -Rf molecule
+
+      - name: Get molecule file
+        run: |
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
+          mv molecule.yml example/molecule.yml
+
+      - name: initialize specific scenario
+        run: |
+          cd example
+          molecule init scenario default --driver-name vagrant --provisioner-name ansible
+          cp ~/.venv/ansible_env/lib/python3.11/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
+          cp molecule.yml molecule/default/molecule.yml
+          molecule create
+
+      - name: Verify vagrant instance
+        run: |
+          cd example
+          molecule list
+
 ...
