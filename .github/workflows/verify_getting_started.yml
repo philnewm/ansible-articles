@@ -33,19 +33,10 @@ jobs:
           python3.10 -m venv ~/.venv/ansible_env
           source ~/.venv/ansible_env/bin/activate
 
-      - name: Write requirements
-        run: |
-          cat <<EOF > requirements.txt
-          ansible==10.6.0
-          molecule==24.9.0
-          molecule-plugins[vagrant]
-          docker==7.1.0
-          EOF
-
       - name: Install requirements
         run: |
           python3.10 -m pip install --upgrade pip
-          python3.10 -m pip install -r requirements.txt
+          python3.10 -m pip install -r ./ansible_molecule/molecule_setup/requirements.txt
 
 
       - name: Install Virtualbox 7.1.4
@@ -81,5 +72,13 @@ jobs:
       - name: Verify default instance
         run: |
           molecule list
+
+      - name: Destroy test instance
+        run: |
+          molecule destroy
+
+      - name: Reset scenario
+        run: |
+          molecule reset
 
 ...

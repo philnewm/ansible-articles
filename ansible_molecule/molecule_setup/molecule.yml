@@ -1,0 +1,15 @@
+---
+
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  # Defaults to Alpine Linux in case no data is provided here
+  - name: Alma9
+    box: almalinux/9
+    box_version: "9.5.20241203"
+    memory: 2048
+    cpus: 2
+
+...
