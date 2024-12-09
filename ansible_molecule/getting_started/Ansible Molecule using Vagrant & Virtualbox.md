@@ -173,7 +173,7 @@ Running `molecule list` should now show this table.
 ```
 
 This will create a default instance using the [delegated driver](https://ansible.readthedocs.io/projects/molecule/configuration/#delegated), which is just called "default".
-As the title suggests we will go for vagrant with Virtualbox as a provider in this example.
+As the title suggests we will go for Vagrant with Virtualbox as a provider in this example.
 So run `molecule destroy` to remove that default instance again.
 Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on rhel-systems but will still work and remove the directory as expected. 
 
@@ -199,21 +199,37 @@ molecule init scenario default --driver-name vagrant --provisioner-name ansible
 cp ~/.venv/ansible_env/lib/python3.11/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
 cp molecule.yml molecule/defgault/molecule.yml
 molecule create
+molecule list
 ```
 ---
 Line 1: Initialize a new scenario using explicit parameters to use vagrant
 Line 2: The default `create.yml` file will cause connection issues on start-up so we fix this by copying the one from the molecule vagrant plugin itself
-Line 3: Now replace the molecule config file `molecule/default/molecule.yml` with the provided one using AlmaLinux9.
+Line 3: Now replace the molecule config file `molecule/default/molecule.yml` with the provided one which uses AlmaLinux9.
 Other vagrant box options can be found on [vagrant cloud](https://portal.cloud.hashicorp.com/vagrant/discover/almalinux/9)
+Line 4: Create the new molecule instance
+Line 5: The list should now display the vagrant instance we just configured
 
-Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a bug, see this [issue](https://github.com/ansible-community/molecule-plugins/issues/239). This should be resolved with the next release.
-In the meantime you can run `vagrant global-status` to get the vagrant instance IDs and `vagrant ssh <id>` to log into one of the VMs.
+### Access Vagrant Instance
+
+Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a bug, see this [issue](https://github.com/ansible-community/molecule-plugins/issues/239) and should be resolved with the next release.
+In the meantime you can run `vagrant global-status` to get the vagrant instance IDs and `vagrant ssh <id>` to log into one of the VMs displayed. Afterwards just type `exit` to drop out of the instance again.
+
+### Provision a service
+
+After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner.
+
+```reference
+title: "tasks.yml"
+file: ./ansible_molecule/getting_started/tasks.yml
+language: yaml
+fold: true
+ln: true
+```
+
+
 
 
 @@TODO might need manual instance deletion otherwise stuck on docker traceback
-
-When just running `molecule create` from the roles root directory and afterwards running `molecule list`you will get something like this (removed a few blanks to make it fit):
-
 
 Now we know it works but this default instance isn't too useful so run `molecule destroy` to delete it again.
 Next edit the molecule.yml file at `<rolen-name>/molecule/default/molecule.yml`

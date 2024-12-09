@@ -101,8 +101,8 @@ jobs:
 
       - name: Reset scenario
         run: |
-          cd example
           molecule reset
+        working-directory: ./example
 
       - name: Clean molecule scenario
         run: |

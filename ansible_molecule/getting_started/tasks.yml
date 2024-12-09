@@ -1,0 +1,15 @@
+---
+
+- name: Install Apashe web server
+  become: true
+  ansible.builtin.package:
+    name: httpd
+    state: present
+
+- name: Ensure Apache has selected state and enabled on boot.
+  service:
+    name: "httpd"
+    state: "started"
+    enabled: true
+
+...
