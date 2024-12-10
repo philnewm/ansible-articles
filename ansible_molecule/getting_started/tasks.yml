@@ -7,7 +7,8 @@
     state: present
 
 - name: Ensure Apache has selected state and enabled on boot.
-  service:
+  become: true  
+  ansible.builtin.service:
     name: "httpd"
     state: "started"
     enabled: true

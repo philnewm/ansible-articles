@@ -196,7 +196,7 @@ ln: true
 
 ```bash title="Create Vagrant VM Instance "
 molecule init scenario default --driver-name vagrant --provisioner-name ansible
-cp ~/.venv/ansible_env/lib/python3.11/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
+cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
 cp molecule.yml molecule/defgault/molecule.yml
 molecule create
 molecule list
