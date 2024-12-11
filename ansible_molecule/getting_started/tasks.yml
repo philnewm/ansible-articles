@@ -1,16 +1,23 @@
 ---
 
-- name: Install Apashe web server
+- name: Gather facts
+  ansible.builtin.gather_facts:
+
+- name: Install Apache web server
   become: true
   ansible.builtin.package:
     name: httpd
     state: present
 
 - name: Ensure Apache has selected state and enabled on boot.
-  become: true  
+  become: true
   ansible.builtin.service:
     name: "httpd"
     state: "started"
     enabled: true
+
+- name: Display VM ip address
+  ansible.builtin.debug:
+    var: ansible_all_ipv4_addresses
 
 ...

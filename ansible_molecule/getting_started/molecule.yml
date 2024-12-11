@@ -11,5 +11,10 @@ platforms:
     box_version: "9.5.20241203"
     memory: 2048
     cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.10"
 
 ...

@@ -25,7 +25,7 @@ This step requires **pip** to be installed.
 On Debian-based systems like Ubuntu you might need to install python-venv first.
 ```reference
 title: "Install virtual environment package"
-link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/verify_getting_started.yml
 start: 29
 end: "+0"
 language: shell
@@ -37,9 +37,9 @@ Create a python virtual environment and activate it from your terminal like this
 Create a `requirements.txt` file containing these lines:
 ```reference
 title: "Create virtual environment"
-link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/verify_getting_started.yml
 start: 33
-end: "+1"
+end: "+0"
 language: shell
 fold: true
 ln: true
@@ -66,7 +66,7 @@ ln: true
 And run you can upgrade pip (just to be sure) and install the requirements
 ```reference
 title: "Install commands on debian-based systems"
-link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/verify_getting_started.yml
 start: 47
 end: "+1"
 language: shell
@@ -85,7 +85,7 @@ See the following table for download pages and version used for the following ex
 
 ```reference
 title: "Install commands on debian-based systems"
-link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/verify_getting_started.yml
 start: 53
 end: "+3"
 language: shell
@@ -108,7 +108,7 @@ This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/
 
 ```reference
 title: "Setup role and molecule scenario"
-link: https://github.com/philnewm/ansible-articles/blob/main/.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/verify_getting_started.yml
 start: 73
 end: "+2"
 language: shell
@@ -173,9 +173,9 @@ Running `molecule list` should now show this table.
 ```
 
 This will create a default instance using the [delegated driver](https://ansible.readthedocs.io/projects/molecule/configuration/#delegated), which is just called "default".
-As the title suggests we will go for Vagrant with Virtualbox as a provider in this example.
+As the title suggests we will go for Vagrant with VirtualBox as a provider in this example.
 So run `molecule destroy` to remove that default instance again.
-Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on rhel-systems but will still work and remove the directory as expected. 
+Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected. 
 
 > [!warning]- Python traceback explanation
 > Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
@@ -187,16 +187,27 @@ Take a look at the [molecule-plugins repository](https://github.com/ansible-comm
 ### Vagrant Instance
 
 ```reference
-title: "requirements.txt"
+title: "molecule.yml"
 file: ./ansible_molecule/getting_started/molecule.yml
 language: yaml
 fold: true
 ln: true
 ```
+---
+> [!info]-
+> Assigning a network-interface using a `192.168.56.X` address is crucial here.
+> VirtualBox sets up two virtual networks  by default.
+> * vboxnet0 - which is Host-only using 192.168.56.1
+> * NatNetwork - using 10.0.2.X
+> 
+> NatNetwork will be used by default but requires port forwarding from the host to the VM to make it accessible from e.g. a browser on the host
+> To get around this we just assign a static address from the host-only network.
+> 
 
 ```bash title="Create Vagrant VM Instance "
 molecule init scenario default --driver-name vagrant --provisioner-name ansible
 cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
+cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
 cp molecule.yml molecule/defgault/molecule.yml
 molecule create
 molecule list
@@ -204,10 +215,11 @@ molecule list
 ---
 Line 1: Initialize a new scenario using explicit parameters to use vagrant
 Line 2: The default `create.yml` file will cause connection issues on start-up so we fix this by copying the one from the molecule vagrant plugin itself
-Line 3: Now replace the molecule config file `molecule/default/molecule.yml` with the provided one which uses AlmaLinux9.
+Line 3: The default `destroy.yml`file won't destroy the vagrant box itself so we replace it by copying the one from the molecule vagrant plugin itself
+Line 4: Now replace the molecule config file `molecule/default/molecule.yml` with the provided one which uses AlmaLinux9.
 Other vagrant box options can be found on [vagrant cloud](https://portal.cloud.hashicorp.com/vagrant/discover/almalinux/9)
-Line 4: Create the new molecule instance
-Line 5: The list should now display the vagrant instance we just configured
+Line 5: Create the new molecule instance
+Line 6: The list should now display the vagrant instance we just configured
 
 ### Access Vagrant Instance
 
@@ -225,8 +237,17 @@ language: yaml
 fold: true
 ln: true
 ```
+---
+These 4 Tasks will execute the following actions in order:
+1. Gather facts about the VirtualBox VM
+2. Install an Apache web-server from the AlmaLinux9 default repositories
+3. Start and enable the web-servers service
+4. Display the VMs IP address for debugging purposes
 
+Now run `molecule converge` to run these tasks against the VirtualBox VM.
+After this ran successfully you should be able to just copy the IP address displayed by the debug task e.g. `192.168.56.10` to your browser and see the default Apache Webserver page right away.
 
+Even tho this is nice, testing the functionality of this web-server manually isn't quite a scaleable approach. So let's also automate this part.
 
 
 @@TODO might need manual instance deletion otherwise stuck on docker traceback
