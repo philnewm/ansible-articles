@@ -16,6 +16,26 @@
     state: "started"
     enabled: true
 
+- name: Create default index.html
+  become: true
+  ansible.builtin.copy:
+    content: |
+      <html>
+      <body>
+        <h1>Welcome to Apache on AlmaLinux!</h1>
+      </body>
+      </html>
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart Apache service
+  become: true
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+
 - name: Display VM ip address
   ansible.builtin.debug:
     var: ansible_all_ipv4_addresses
