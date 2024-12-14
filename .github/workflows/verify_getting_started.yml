@@ -112,12 +112,8 @@ jobs:
       - name: Get molecule file
         run: |
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
-        working-directory: ./example
-
-      - name: Get molecule requirements file
-        run: |
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/requirements.yml
-        working-directory: ./example/molecule/default
+        working-directory: ./example
 
       - name: Display host only networks
         run: |
@@ -129,6 +125,11 @@ jobs:
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
           cp molecule.yml molecule/default/molecule.yml
+          cp requirements.yml molecule/default/requirements.yml
+        working-directory: ./example
+
+      - name: Create default instance
+        run: |
           molecule create
         working-directory: ./example
 
