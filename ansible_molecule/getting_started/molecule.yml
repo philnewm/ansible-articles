@@ -12,7 +12,23 @@ platforms:
     memory: 2048
     cpus: 2
     interfaces:
-      - type: private_network
+      - auto_config: true
+        network_name: private_network
+        type: "static"
         ip: "192.168.56.10"
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      diff: True
+      gathering: smart
+      fact_caching: jsonfile
+      fact_caching_connection: /tmp/ansible_fact_cache
+      stdout_callback: debug
+      callbacks_enabled: ansible.posix.profile_tasks
+    connection:
+      pipelining: true
+    env:
+      ANSIBLE_FORCE_COLOR: "true"
 
 ...

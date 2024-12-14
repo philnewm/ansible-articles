@@ -114,9 +114,14 @@ jobs:
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
         working-directory: ./example
 
+      - name: Get molecule requirements file
+        run: |
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/requirements.yml
+        working-directory: ./example/molecule/default
+
       - name: Display host only networks
         run: |
-          VBoxManage list hostonlyifs
+          LOGNAME=$(whoami) USER=$(whoami) VBoxManage list hostonlyifs
 
       - name: Initialize specific scenario
         run: |
