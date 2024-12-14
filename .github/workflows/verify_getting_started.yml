@@ -114,10 +114,15 @@ jobs:
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
         working-directory: ./example
 
-      - name: initialize specific scenario
+      - name: Display host only networks
+        run: |
+          VBoxManage list hostonlyifs
+
+      - name: Initialize specific scenario
         run: |
           molecule init scenario default --driver-name vagrant --provisioner-name ansible
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
+          cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
           cp molecule.yml molecule/default/molecule.yml
           molecule create
         working-directory: ./example
