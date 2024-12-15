@@ -38,8 +38,4 @@
     name: httpd
     state: restarted
 
-- name: Display VM ip address
-  ansible.builtin.debug:
-    var: ansible_all_ipv4_addresses
-
 ...

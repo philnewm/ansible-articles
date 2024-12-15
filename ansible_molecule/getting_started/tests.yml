@@ -20,10 +20,6 @@
     fail_msg: "Apache service is not running."
     quiet: true
 
-- name: Show address
-  ansible.builtin.debug:
-    var: ansible_all_ipv4_addresses[0]
-
 - name: Query Apache default web page
   ansible.builtin.uri:
     url: "http://{{ ansible_all_ipv4_addresses[0] }}"
