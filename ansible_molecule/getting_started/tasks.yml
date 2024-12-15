@@ -29,9 +29,11 @@
     owner: root
     group: root
     mode: '0644'
+  register: default_page
 
 - name: Restart Apache service
   become: true
+  when: default_page.changed
   ansible.builtin.service:
     name: httpd
     state: restarted
