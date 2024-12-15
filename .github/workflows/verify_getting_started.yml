@@ -118,6 +118,8 @@ jobs:
         run: |
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/requirements.yml
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/converge.yml
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/verify.yml
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/tasks.yml
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/tests.yml
         working-directory: ./example
@@ -136,8 +138,11 @@ jobs:
           molecule init scenario default --driver-name vagrant --provisioner-name ansible
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
+          mv converge.yml molecule/default/converge.yml
+          mv verify.yml molecule/default/verify.yml
           mv molecule.yml molecule/default/molecule.yml
           mv requirements.yml molecule/default/requirements.yml
+
           mv tasks.yml tasks/main.yml
           mv tests.yml tasks/tests.yml
         working-directory: ./example
