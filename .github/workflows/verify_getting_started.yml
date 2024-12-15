@@ -118,6 +118,8 @@ jobs:
         run: |
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/molecule.yml
           curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/requirements.yml
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/tasks.yml
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/tests.yml
         working-directory: ./example
 
       - name: Create VirtualBox Host-Only Network
@@ -134,8 +136,10 @@ jobs:
           molecule init scenario default --driver-name vagrant --provisioner-name ansible
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
-          cp molecule.yml molecule/default/molecule.yml
-          cp requirements.yml molecule/default/requirements.yml
+          mv molecule.yml molecule/default/molecule.yml
+          mv requirements.yml molecule/default/requirements.yml
+          mv tasks.yml molecule/default/tasks/main.yml
+          mv tests.yml molecule/default/tasks/tests.yml
         working-directory: ./example
 
       - name: Create default instance
@@ -146,6 +150,11 @@ jobs:
       - name: Verify vagrant instance
         run: |
           molecule list
+        working-directory: ./example
+
+      - name: Run test
+        run: |
+          moelcule test
         working-directory: ./example
 
 ...
