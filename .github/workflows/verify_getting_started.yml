@@ -138,8 +138,8 @@ jobs:
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
           mv molecule.yml molecule/default/molecule.yml
           mv requirements.yml molecule/default/requirements.yml
-          mv tasks.yml molecule/default/tasks/main.yml
-          mv tests.yml molecule/default/tasks/tests.yml
+          mv tasks.yml tasks/main.yml
+          mv tests.yml tasks/tests.yml
         working-directory: ./example
 
       - name: Create default instance
