@@ -154,7 +154,7 @@ jobs:
 
       - name: Run test
         run: |
-          moelcule test
+          molecule test
         working-directory: ./example
 
 ...
