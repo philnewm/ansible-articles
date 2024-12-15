@@ -170,7 +170,7 @@ jobs:
           mv tests.yml tasks/tests.yml
         working-directory: ./example
 
-      - name: Converge vagrant instance
+      - name: Verify vagrant instance
         run: |
           molecule verify
         working-directory: ./example

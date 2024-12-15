@@ -45,9 +45,9 @@ fold: true
 ln: true
 ```
 
-* requires python >=3.10
-* install `python3.11` on rhel systems like almalinux9
-* install pip by running `python3.11 -m ensurepip`
+* Requires python >=3.10
+* Install `python3.11` on rhel systems like AlmaLinux9
+* Install pip by running `python3.11 -m ensurepip`
 
 Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
@@ -195,7 +195,7 @@ ln: true
 ```
 ---
 You can find some explanation of all these settings in the [Ansible molecule docs](https://ansible.readthedocs.io/projects/molecule/getting-started/#inspecting-the-moleculeyml)
-> [!info]-
+> [!info]- VirtualBox Network Setup
 > Assigning a network-interface using a `192.168.56.X` address is crucial here.
 > VirtualBox sets up two virtual networks  by default.
 > * vboxnet0 - which is Host-only using 192.168.56.1
@@ -262,7 +262,7 @@ After this ran successfully you should be able to just copy the IP address displ
 Even tho this is nice, testing the functionality of this web-server manually isn't quite a scalable approach. So let's also automate this part.
 It's time to set up automated testing for this role.
 
-### Test vagrant instance
+### Test Vagrant Instance
 ---
 We will use [Ansible for testing](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible) as well to stay with the default and to keep it simple. Another popular option for molecule testing is utilizing [testinfra](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra)
 Take a look now at these test tasks which should be self-explanatory due to their names.
