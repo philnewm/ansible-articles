@@ -109,8 +109,8 @@ This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/
 ```reference
 title: "Setup role and molecule scenario"
 file: ./.github/workflows/verify_getting_started.yml
-start: 73
-end: "+2"
+start: 75
+end: "+0"
 language: shell
 fold: true
 ln: true
@@ -148,10 +148,10 @@ Now you got a "molecule" directory inside the role containing a bunch of default
 
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)
 
-## How-To-Example
-
+## Hands-on-Example
+---
 ### Default Instance
-
+---
 Creating a molecule instance is done by running `molecule create` if you do that right away from the roles root directory you will most likely encounter the following error:
 ```code
 ERROR    Computed fully qualified role name of sample does not follow current galaxy requirements.
@@ -185,7 +185,7 @@ If you run `molecule drivers` you should see a list of installed drivers includi
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
 ### Vagrant Instance
-
+---
 ```reference
 title: "molecule.yml"
 file: ./ansible_molecule/getting_started/molecule.yml
@@ -194,6 +194,7 @@ fold: true
 ln: true
 ```
 ---
+You can find some explanation of all these settings in the [Ansible molecule docs](https://ansible.readthedocs.io/projects/molecule/getting-started/#inspecting-the-moleculeyml)
 > [!info]-
 > Assigning a network-interface using a `192.168.56.X` address is crucial here.
 > VirtualBox sets up two virtual networks  by default.
@@ -214,22 +215,26 @@ fold: true
 ln: true
 ```
 ---
+@@ TODO research line number referencing in Ansible books
 Line 1: Initialize a new scenario using explicit parameters to use vagrant
 Line 2: The default `create.yml` file will cause connection issues on start-up so we fix this by copying the one from the molecule vagrant plugin itself
 Line 3: The default `destroy.yml`file won't destroy the vagrant box itself so we replace it by copying the one from the molecule vagrant plugin itself
-Line 4: Now replace the molecule config file `molecule/default/molecule.yml` with the provided one which uses AlmaLinux9.
-Other vagrant box options can be found on [vagrant cloud](https://portal.cloud.hashicorp.com/vagrant/discover/almalinux/9)
-Line 5: Create the new molecule instance
-Line 6: The list should now display the vagrant instance we just configured
+Line 4: @@TODO try to get rid of this line - requires removing debug formatting from molecule.yml
+Line 5: Now replace the molecule config file `molecule/default/molecule.yml` with the provided one which uses AlmaLinux9. - Get other vagrant boxes on [vagrant cloud](https://portal.cloud.hashicorp.com/vagrant/discover/almalinux/9)
+Line 6: Same goes for the `converge.yml` playbook
+Line 7: Same goes for the `verify.yml` playbook
 
+Running `molecule ceate` and `moelcule list` when it's done should now display a vagrant instance.
 ### Access Vagrant Instance
+---
 
-Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a bug, see this [issue](https://github.com/ansible-community/molecule-plugins/issues/239) and should be resolved with the next release.
+Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a [bug](https://github.com/ansible-community/molecule-plugins/issues/239) and should be resolved with the next release.
 In the meantime you can run `vagrant global-status` to get the vagrant instance IDs and `vagrant ssh <id>` to log into one of the VMs displayed. Afterwards just type `exit` to drop out of the instance again.
 
 ### Provision a service
-
-After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner.
+---
+After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner. We will use these tasks so set up an apache web-server.
+This is just a very basic example for demonstration.
 
 ```reference
 title: "tasks.yml"
@@ -239,17 +244,49 @@ fold: true
 ln: true
 ```
 ---
-These 4 Tasks will execute the following actions in order:
-1. Gather facts about the VirtualBox VM
-2. Install an Apache web-server from the AlmaLinux9 default repositories
-3. Start and enable the web-servers service
-4. Display the VMs IP address for debugging purposes
+```reference
+title: "Initialize vagrant scenario"
+file: ./.github/workflows/verify_getting_started.yml
+start: 160
+end: "+0"
+language: shell
+fold: true
+ln: true
+```
+---
+Now add these tasks into `tasks/main.yml` to execute them by default.
 
-Now run `molecule converge` to run these tasks against the VirtualBox VM.
+Next run `molecule converge` to run these tasks against the VirtualBox VM.
 After this ran successfully you should be able to just copy the IP address displayed by the debug task e.g. `192.168.56.10` to your browser and see the default Apache Webserver page right away.
 
-Even tho this is nice, testing the functionality of this web-server manually isn't quite a scaleable approach. So let's also automate this part.
+Even tho this is nice, testing the functionality of this web-server manually isn't quite a scalable approach. So let's also automate this part.
+It's time to set up automated testing for this role.
 
+### Test vagrant instance
+---
+We will use [Ansible for testing](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible) as well to stay with the default and to keep it simple. Another popular option for molecule testing is utilizing [testinfra](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra)
+Take a look now at these test tasks which should be self-explanatory due to their names.
+
+```reference
+title: "tests.yml"
+file: ./ansible_molecule/getting_started/tests.yml
+language: yaml
+fold: true
+ln: true
+```
+---
+```reference
+title: "Initialize vagrant scenario"
+file: ./.github/workflows/verify_getting_started.yml
+start: 170
+end: "+0"
+language: shell
+fold: true
+ln: true
+```
+
+Place these tasks into a file called `tests.yml` in the tasks directory to amke them easily accessable.
+Now you should be able to run `molecule verify` to have these tests run against the VM.
 
 @@TODO might need manual instance deletion otherwise stuck on docker traceback
 

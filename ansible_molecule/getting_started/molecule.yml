@@ -24,5 +24,8 @@ provisioner:
       callbacks_enabled: ansible.posix.profile_tasks
     env:
       ANSIBLE_FORCE_COLOR: "true"
+verifier:
+  name: ansible
+  enabled: True
 
 ...

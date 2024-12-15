@@ -71,7 +71,8 @@ jobs:
           sudo apt-get install vagrant -y
 
       - name: Verify Vagrant installation
-        run: vagrant --version
+        run: |
+          vagrant --version
 
       - name: Setup role and molecule scenario
         run: |
@@ -144,12 +145,6 @@ jobs:
           mv verify.yml molecule/default/verify.yml
         working-directory: ./example
 
-      - name: Initialize vagrant scenario
-        run: |
-          mv tasks.yml tasks/main.yml
-          mv tests.yml tasks/tests.yml
-        working-directory: ./example
-
       - name: Create vagrant instance
         run: |
           molecule create
@@ -158,6 +153,26 @@ jobs:
       - name: Verify vagrant instance
         run: |
           molecule list
+        working-directory: ./example
+
+      - name: Set role tasks
+        run: |
+          mv tasks.yml tasks/main.yml
+        working-directory: ./example
+
+      - name: Converge vagrant instance
+        run: |
+          molecule converge
+        working-directory: ./example
+
+      - name: Set role tests
+        run: |
+          mv tests.yml tasks/tests.yml
+        working-directory: ./example
+
+      - name: Converge vagrant instance
+        run: |
+          molecule verify
         working-directory: ./example
 
       - name: Run test
