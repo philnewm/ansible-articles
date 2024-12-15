@@ -185,7 +185,6 @@ If you run `molecule drivers` you should see a list of installed drivers includi
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
 ### Vagrant Instance
-@@ TODO add error formatting
 
 ```reference
 title: "molecule.yml"
