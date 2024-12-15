@@ -25,13 +25,22 @@ It does however support remote controlling [Windows hosts](https://docs.ansible.
 
 ### Python
 
+You will need python >= 3.10 to install the latest versions of all required python packages.
+```lang:bash fold:true ln:true title:"Install python3.10 on Ubuntu22.04"
+sudo apt-get install python3.10
+```
+
+```lang:bash fold:true ln:true title:"Install python3.11 on AlmaLinux9"
+sudo dnf install python3.11
+```
+
+
 First install a bunch of python packages like Ansible, Molecule and its vagrant plugin.
-For this to work you will need python >= 3.10 installed.
 @TODO explain that better
 The docker python package also gets installed here cause `molecule reset` seems to fail when it's not installed.
 This step requires **[pip](https://packaging.python.org/en/latest/guides/installing-using-linux-tools/#installing-pip-setuptools-wheel-with-linux-package-managers)** to be installed.
 
-> [!tip] Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly reccomnended.
+> [!tip] Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly recommended.
 
 On Debian-based systems like Ubuntu you might need to install python-venv first.
 ```reference
