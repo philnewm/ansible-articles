@@ -10,17 +10,28 @@ tags:
 
 After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [[#Prepare development environment]]
 So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by vagrant using VirtualBox as provider.
-This was tested last on @@TODO insert date and works for the versions mentioned in [[#Requirements]]
+The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [[#Requirements]]
 
 ## Requirements
 
+### System
+
+Since we will use VirtualBox virtual Machines in this guide it's required for you system to have virtualization enabled in your Mainboards BIOS or UEFI.
+Check this [article](https://helpdeskgeek.com/how-to/how-to-enable-virtualization-in-bios-for-intel-and-amd/) for further details
+
+This guide is intended to be followed on a Linux system.
+To follow this [guide on a Windows system](https://ultahost.com/knowledge-base/install-ansible-on-windows/) you will need to use the Windows Subsystem for Linux (WSL) since Ansible is not supported on Windows.
+It does however support remote controlling [Windows hosts](https://docs.ansible.com/ansible/latest/os_guide/intro_windows.html).
+
+### Python
+
 First install a bunch of python packages like Ansible, Molecule and its vagrant plugin.
 For this to work you will need python >= 3.10 installed.
+@TODO explain that better
 The docker python package also gets installed here cause `molecule reset` seems to fail when it's not installed.
-This step requires **pip** to be installed.
-* Virtualization enabled - due to running virtual machines from molecule
+This step requires **[pip](https://packaging.python.org/en/latest/guides/installing-using-linux-tools/#installing-pip-setuptools-wheel-with-linux-package-managers)** to be installed.
 
-> [!tip] Additionally I recommend creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first.
+> [!tip] Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly reccomnended.
 
 On Debian-based systems like Ubuntu you might need to install python-venv first.
 ```reference
@@ -34,12 +45,11 @@ ln: true
 ```
 
 Create a python virtual environment and activate it from your terminal like this:
-Create a `requirements.txt` file containing these lines:
 ```reference
 title: "Create virtual environment"
 file: ./.github/workflows/verify_getting_started.yml
 start: 33
-end: "+0"
+end: "+1"
 language: shell
 fold: true
 ln: true

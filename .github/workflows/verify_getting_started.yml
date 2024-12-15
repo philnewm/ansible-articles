@@ -31,10 +31,13 @@ jobs:
       - name: Create environment
         run: |
           python3.10 -m venv ~/.venv/ansible_env
+          source ~/.venv/ansible_env/bin/activate
 
-      - name: Get requirements
+      - name: Ensure global venv for this workflow
         run: |
-          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/requirements.txt
+          source ~/.venv/ansible_env/bin/activate
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
       - name: Install requirements
         run: |
@@ -42,11 +45,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Ensure global venv for this workflow
+      - name: Get requirements
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
-          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+          curl -O https://raw.githubusercontent.com/${{ github.repository }}/main/ansible_molecule/getting_started/requirements.txt
 
       - name: Set environment variables for VirtualBox
         run: |
