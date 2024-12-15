@@ -48,6 +48,11 @@ jobs:
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
           echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
+      - name: Set environment variables for VirtualBox
+        run: |
+          export LOGNAME=$USER
+          export USER=$(whoami)
+
       - name: Install Virtualbox 7.1.4
         run: |
           sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list'
@@ -117,12 +122,12 @@ jobs:
 
       - name: Create VirtualBox Host-Only Network
         run: |
-          LOGNAME=$(whoami) USER=$(whoami) VBoxManage hostonlyif create
-          LOGNAME=$(whoami) USER=$(whoami) VBoxManage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
+          VBoxManage hostonlyif create
+          hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
 
       - name: Display host only networks
         run: |
-          LOGNAME=$(whoami) USER=$(whoami) VBoxManage list hostonlyifs
+          VBoxManage list hostonlyifs
 
       - name: Initialize specific scenario
         run: |
