@@ -20,14 +20,8 @@ provisioner:
   name: ansible
   config_options:
     defaults:
-      diff: True
-      gathering: smart
-      fact_caching: jsonfile
-      fact_caching_connection: /tmp/ansible_fact_cache
       stdout_callback: debug
       callbacks_enabled: ansible.posix.profile_tasks
-    connection:
-      pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"
 

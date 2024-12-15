@@ -205,13 +205,14 @@ ln: true
 > To get around this we just assign a static address from the host-only network.
 > 
 
-```bash title="Create Vagrant VM Instance "
-molecule init scenario default --driver-name vagrant --provisioner-name ansible
-cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
-cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
-cp molecule.yml molecule/defgault/molecule.yml
-molecule create
-molecule list
+```reference
+title: "Initialize vagrant scenario"
+file: ./.github/workflows/verify_getting_started.yml
+start: 138
+end: "+6"
+language: shell
+fold: true
+ln: true
 ```
 ---
 Line 1: Initialize a new scenario using explicit parameters to use vagrant

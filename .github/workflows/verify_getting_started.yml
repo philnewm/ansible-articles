@@ -133,7 +133,7 @@ jobs:
         run: |
           VBoxManage list hostonlyifs
 
-      - name: Initialize specific scenario
+      - name: Initialize vagrant scenario
         run: |
           molecule init scenario default --driver-name vagrant --provisioner-name ansible
           cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
@@ -142,12 +142,15 @@ jobs:
           mv verify.yml molecule/default/verify.yml
           mv molecule.yml molecule/default/molecule.yml
           mv requirements.yml molecule/default/requirements.yml
+        working-directory: ./example
 
+      - name: Initialize vagrant scenario
+        run: |
           mv tasks.yml tasks/main.yml
           mv tests.yml tasks/tests.yml
         working-directory: ./example
 
-      - name: Create default instance
+      - name: Create vagrant instance
         run: |
           molecule create
         working-directory: ./example
