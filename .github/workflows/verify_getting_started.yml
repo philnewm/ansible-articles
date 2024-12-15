@@ -50,8 +50,8 @@ jobs:
 
       - name: Set environment variables for VirtualBox
         run: |
-          export LOGNAME=$USER
-          export USER=$(whoami)
+          echo "LOGNAME=$USER" >> $GITHUB_ENV
+          echo "USER=$(whoami)" >> $GITHUB_ENV
 
       - name: Install Virtualbox 7.1.4
         run: |
@@ -123,7 +123,7 @@ jobs:
       - name: Create VirtualBox Host-Only Network
         run: |
           VBoxManage hostonlyif create
-          hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
+          VBoxManage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
 
       - name: Display host only networks
         run: |
