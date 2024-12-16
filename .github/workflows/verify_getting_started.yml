@@ -26,7 +26,7 @@ jobs:
 
       - name: Install ubuntu dependencies
         run: |
-          sudo apt-get install python3.10-venv -y
+          sudo apt-get install python3.10-venv python3.10-pip -y
 
       - name: Create environment
         run: |
@@ -45,9 +45,8 @@ jobs:
 
       - name: Install requirements
         run: |
-          source ~/.venv/ansible_env/bin/activate
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Set environment variables for VirtualBox
         run: |
