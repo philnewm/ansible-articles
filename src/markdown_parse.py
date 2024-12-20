@@ -13,7 +13,7 @@ def dict_to_object(name: str, dictionary: dict[str, str]):
     DynamicClass = make_dataclass(name, fields)
     return DynamicClass(**dictionary)
 
-input_file = "./ansible_molecule/getting_started/testing.md"
+input_file = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
 
 # for token in tokens:
 #     if token.type == "fence" and token.info == "reference":
@@ -69,6 +69,8 @@ reconstructed_content = ""
 for index, token in enumerate(tokens):
     token: Token = tokens[index]
     if token.type == "heading_open":
+        if token.tag == "h2":
+            reconstructed_content += "\n"
         heading: str = f"{token.markup} {tokens[index + 1].content} {tokens[index + 2].markup}\n"
         reconstructed_content += heading
         continue
@@ -83,7 +85,7 @@ for index, token in enumerate(tokens):
     if token.type == "paragraph_close" and tokens[index-1].type != "list_item_close":
         reconstructed_content += "\n"
 
-    if token.type == "bullet_list_open" or token.type == "bullet_list_close":
+    if token.type == "bullet_list_open":
         reconstructed_content += "\n"
 
     if token.type == "list_item_open":
