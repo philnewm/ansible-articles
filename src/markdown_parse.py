@@ -1,4 +1,3 @@
-import os
 import pprint
 import yaml
 from markdown_it import MarkdownIt
@@ -14,24 +13,7 @@ def dict_to_object(name: str, dictionary: dict[str, str]):
     DynamicClass = make_dataclass(name, fields)
     return DynamicClass(**dictionary)
 
-
-def query_code_from_workflow(file_name:str, job_name:str, step_name:str) -> str:
-    with open(file_name, "r") as file:
-        yaml_content = yaml.safe_load(file)
-
-    steps: dict[str, str] = yaml_content["jobs"][job_name]["steps"]
-    # TODO move conversion out of this function
-    name_to_run = {step["name"]: step.get("run") for step in steps}
-    return name_to_run[step_name]
-
-
-input_file = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
-
-with open(input_file, "r") as file:
-    md_content: str = file.read()
-
-md = MarkdownIt()
-tokens: list[Token] = md.parse(md_content)
+input_file = "./ansible_molecule/getting_started/testing.md"
 
 # for token in tokens:
 #     if token.type == "fence" and token.info == "reference":
@@ -51,12 +33,64 @@ tokens: list[Token] = md.parse(md_content)
 # if file is workflow look for steps with same name
 # -> replace code reference with step code
 # default: replace with referenced file content
-# write new markdown file?
+# update token values for code snippets
+# combine content back together
+# overwrite previous file
 
-result:str = query_code_from_workflow(
-    file_name=workflow_path,
+def map_step_name_to_code(workflow_file: str, job_name: str) -> dict[str, str]:
+    
+    with open(workflow_file, "r") as file:
+        yaml_content = yaml.safe_load(file)
+
+    steps: dict[str, str] = yaml_content["jobs"][job_name]["steps"]
+
+    return {step["name"]: step.get("run") for step in steps}
+
+
+step_name: str = "Setup role and molecule scenario"
+
+
+md = MarkdownIt()
+
+with open(input_file, "r") as file:
+    md_content: str = file.read()
+
+tokens: list[Token] = md.parse(md_content)
+
+result:dict[str, str] = map_step_name_to_code(
+    workflow_file=workflow_path,
     job_name="molecule-setup-ci",
-    step_name="Setup role and molecule scenario"
     )
 
-pprint.pprint(result)
+# updated_md_content: str = "".join(token.content if token.content else token.markup + "\n" for token in tokens)
+
+reconstructed_content = ""
+
+for index, token in enumerate(tokens):
+    token: Token = tokens[index]
+    if token.type == "heading_open":
+        heading: str = f"{token.markup} {tokens[index + 1].content} {tokens[index + 2].markup}\n"
+        reconstructed_content += heading
+        continue
+
+    if token.type == "fence":
+        reconstructed_content += f"\n```{token.info}\n{token.content}```\n\n"
+        continue
+
+    if token.type == "paragraph_open" and tokens[index-1].type != "list_item_open":
+        reconstructed_content += "\n"
+
+    if token.type == "paragraph_close" and tokens[index-1].type != "list_item_close":
+        reconstructed_content += "\n"
+
+    if token.type == "bullet_list_open" or token.type == "bullet_list_close":
+        reconstructed_content += "\n"
+
+    if token.type == "list_item_open":
+        list_item: str = f"{token.markup} {tokens[index + 2].content}"
+        continue
+
+    if token.content and tokens[index-1].type != "heading_open":
+        reconstructed_content += f"{token.content}"
+
+print(reconstructed_content)
