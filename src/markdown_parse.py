@@ -1,19 +1,18 @@
 import pprint
 import yaml
+from typing import NamedTuple
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 from dataclasses import make_dataclass
 
 
-workflow_path:str = ".github/workflows/verify_getting_started.yml"
+workflow_path:str = "./.github/workflows/verify_getting_started.yml"
 
 
 def dict_to_object(name: str, dictionary: dict[str, str]):
     fields = [(key, type(value), value) for key, value in dictionary.items()]
     DynamicClass = make_dataclass(name, fields)
     return DynamicClass(**dictionary)
-
-input_file = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
 
 def map_step_name_to_code(workflow_file: str, job_name: str) -> dict[str, str]:
     
@@ -24,85 +23,65 @@ def map_step_name_to_code(workflow_file: str, job_name: str) -> dict[str, str]:
 
     return {step["name"]: step.get("run") for step in steps}
 
+def get_code_from(file_path):
+    with open(file_path, "r") as file:
+        code = file.read()
+
+    return code
 
 step_name: str = "Setup role and molecule scenario"
-
+input_file = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
 
 md = MarkdownIt()
 
-in_ref_code_block = False
-code_block_yaml: str = ""
-updated_lines: list[str] = []
-
 with open(input_file, "r") as file:
-    # md_content: str = file.read()
-    for line in file:
-        if line.startswith("```reference"):
-            in_ref_code_block = True
-            continue
+    md_content = file.read()
+tokens: list[Token] = md.parse(md_content)
 
-        if in_ref_code_block:
-            code_block_yaml += line
-
-        if line.startswith("```") and in_ref_code_block:
-            in_ref_code_block = False
-            updated_lines.append(f"```yaml\n{code_block_yaml}```")
-            code_block_yaml = ""
-            continue
+class code_map(NamedTuple):
+    reference: str
+    source_code: str
 
 
-
-# tokens: list[Token] = md.parse(md_content)
-
-result:dict[str, str] = map_step_name_to_code(
+step_to_code_map:dict[str, str] = map_step_name_to_code(
     workflow_file=workflow_path,
     job_name="molecule-setup-ci",
     )
 
-# updated_md_content: str = "".join(token.content if token.content else token.markup + "\n" for token in tokens)
+def get_code(code_file: str, workflow_path: str= "", title: str=""):
+    if code_file == workflow_path:
+        if title not in step_to_code_map.keys():
+            raise ValueError(f"Couldn't find step name '{title}' in workflow")
 
-# reconstructed_content: str = ""
+        return step_to_code_map[title]
 
-# for index, token in enumerate(tokens):
-#     if token.type == "heading_close":
-#         if token.tag != "h1":
-#             reconstructed_content += "\n"
- 
-#         heading: str = f"{tokens[index - 2].markup} {tokens[index - 1].content}\n\n"
-#         reconstructed_content += heading
-#         continue
+    return get_code_from(file_path=code_file)
 
-#     if token.type == "fence":
-#         reconstructed_content += f"\n```{token.info}\n{token.content}```\n\n"
-#         continue
+code_map_list: list[code_map] = []
 
-#     if token.type == "paragraph_close":
-#         reconstructed_content += "\n"
-#         continue
+for token in tokens:
+    if token.type == "fence" and token.info=="reference":
+        reference_dict: dict[str, str] = yaml.safe_load(token.content)
+        
+        file_path = reference_dict["file"]
+        code_title = reference_dict["title"]
+        code_laguage = reference_dict["language"]
+        
+        source_code = get_code(
+            code_file=file_path,
+            workflow_path=workflow_path,
+            title=code_title,
+            )
+        
+        source_code_formatted = f"\n```{code_laguage}\n{source_code}```"
+        code_reference = f"{token.markup}{token.info}\n{token.content}{token.markup}"
 
-#     if token.type == "list_item_open":
-#         reconstructed_content += f"{token.markup} {tokens[index+2].content}"
-#         continue
+        code_map_list.append(code_map(reference=code_reference, source_code=source_code_formatted))
 
-#     if token.type == "bullet_list_open":
-#         reconstructed_content += "\n"
-#         continue
+export_content = md_content
+for code_map in code_map_list:
+    export_content = export_content.replace(code_map.reference, code_map.source_code)
 
-#     if token.type == "bullet_list_close":
-#         reconstructed_content += "\n"
-#         continue
-
-#     if token.content:
-#         if tokens[index-1].type == "heading_open":
-#             continue
-
-#         if tokens[index-2].type == "list_item_open":
-#             continue
-
-#         reconstructed_content += f"{token.content}"
-
-# print(reconstructed_content)
-
-# output_file = "output.md"
-# with open(output_file, "w") as file:
-#     file.write(reconstructed_content)
+output_file = "output.md"
+with open(output_file, "w") as file:
+    file.write(export_content)
