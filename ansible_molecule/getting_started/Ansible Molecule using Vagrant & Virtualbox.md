@@ -48,6 +48,7 @@ Next we need a bunch of python packages like Ansible, Molecule and its Vagrant p
 
 Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
+
 ```reference
 title: "requirements.txt"
 file: ./ansible_molecule/getting_started/requirements.txt
@@ -61,6 +62,7 @@ ln: true
 > A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far. 
 
 Now you can run upgrade pip (just to be sure) and install the requirements.
+
 ```reference
 title: "Create virtual environment"
 file: ./.github/workflows/verify_getting_started.yml
@@ -103,12 +105,13 @@ sudo dnf install virtualbox-7.1 -y
 ```
 
 Verify the successful installation of both tools by running these version query commands:
+
 * `VBoxManage --version`
 * `vagrant --version`
 
 ## Prepare development environment
 
-While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`. 
+While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`.
 This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/molecule/releases/tag/v6.0.0) - it was removed intentional to get rid of the [Ansible-Galaxy](https://github.com/ansible/galaxy) dependency. By now you simply use the `role init` command to initialize an Ansible role and initialize a molecule scenario from within the role afterwards.
 
 ```reference
@@ -157,6 +160,7 @@ For details about how each file and directory inside this role structure is supp
 ### Default Instance
 
 Creating a molecule instance is done by running `molecule create` if you do that right away from the roles root directory you will most likely encounter the following error:
+
 ```code
 ERROR    Computed fully qualified role name of sample does not follow current galaxy requirements.
 Please edit meta/main.yml and assure we can correctly determine full role name:
@@ -165,13 +169,16 @@ galaxy_info:
 role_name: my_name  # if absent directory name hosting role is used instead
 namespace: my_galaxy_namespace  # if absent, author is used instead
 ```
+
 This happens due to molecule running a [role name-check](https://ansible.readthedocs.io/projects/molecule/configuration/#role-name-check) by default.
 As stated in the documentation you can either disable the check or just add the `role_name` and `namespace` to the `meta/main.yml` file.
 
 Now running `molecule create` should, while throwing a bunch of warnings, already work.
 Running `molecule list` should now show this table.
+
 ```code
-	         ╷           ╷                ╷             ╷       ╷        Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
+             ╷           ╷                ╷             ╷       ╷        
+Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
   instance   │ default   │ ansible        │ default     │ true  │ false     
              ╵           ╵                ╵             ╵       ╵           
 ```
@@ -180,7 +187,7 @@ This will create a default instance using the [delegated driver](https://ansible
 As the title suggests we will go for Vagrant with VirtualBox as a provider in this example.
 So run `molecule destroy` to remove that default instance again.
 @@TODO explain ephermal environment
-Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected. 
+Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
 
 > [!warning]- Python traceback explanation
 > Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
@@ -203,12 +210,13 @@ You can find some explanation of all these settings in the [Ansible molecule doc
 > [!info]- VirtualBox Network Setup
 > Assigning a network-interface using a `192.168.56.X` address is crucial here.
 > VirtualBox sets up two virtual networks  by default.
+>
 > * vboxnet0 - which is Host-only using 192.168.56.1
 > * NatNetwork - using 10.0.2.X
-> 
+>
 > NatNetwork will be used by default but requires port forwarding from the host to the VM to make it accessible from e.g. a browser on the host
 > To get around this we just assign a static address from the host-only network.
-> 
+>
 
 ```reference
 title: "Initialize vagrant scenario"
@@ -230,6 +238,7 @@ Line 6: Same goes for the `converge.yml` playbook
 Line 7: Same goes for the `verify.yml` playbook
 
 Running `molecule ceate` and `molecule list` when it's done should now display a vagrant instance.
+
 ### Access Vagrant Instance
 
 Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a [bug](https://github.com/ansible-community/molecule-plugins/issues/239) and should be resolved with the next release.
@@ -247,7 +256,6 @@ language: yaml
 fold: true
 ln: true
 ```
----
 
 Now replace the content of `tasks/main.yml` with these yaml tasks.
 
@@ -268,11 +276,9 @@ language: yaml
 fold: true
 ln: true
 ```
----
 
 Place these tasks into a file called `tests.yml` in the tasks directory to make them easily accessible.
 Now you should be able to run `molecule verify` to have these tests run against the VM.
 
 ## Vagrant
 Explain what gets saved where and how does the ephemeral directory work
-

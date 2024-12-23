@@ -6,16 +6,17 @@ tags:
   - blog
 ---
 # Getting started with Ansible Molecule
-## Intro
 ---
+## Intro
+
 After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [[#Prepare development environment]]
 So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by Vagrant using VirtualBox as provider.
 The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [[#Requirements]]
 
 ## Requirements
-
-### System
 ---
+### System
+
 Since we will use VirtualBox virtual Machines in this guide it's required for you system to have virtualization enabled in your Mainboards BIOS or UEFI.
 Check this [article](https://helpdeskgeek.com/how-to/how-to-enable-virtualization-in-bios-for-intel-and-amd/) for further details
 
@@ -25,14 +26,13 @@ To follow this [guide on a Windows system](https://ultahost.com/knowledge-base/i
 It does however support remote controlling [Windows hosts](https://docs.ansible.com/ansible/latest/os_guide/intro_windows.html).
 
 ### Python
----
+
 You will need python >= 3.10 to install the latest versions of all required python packages.
 Additional the python-venv and python-pip package will be required.
 Here just the example install command for Ubuntu22.04
 `sudo apt-get install python3.10 python3.10-venv python3.10-pip`
 
 > [!tip] Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly recommended.
-
 
 ```shell
 python3.10 -m venv ~/.venv/ansible_env
@@ -63,7 +63,7 @@ source ~/.venv/ansible_env/bin/activate
 ```
 
 ### Tools
----
+
 As the title suggests you also need Virtualbox and Vagrant installed to follow along.
 
 **Vagrant** is a virtual machine management tool which allows molecule to create, start and remove virtual machines in an automated way.
@@ -75,7 +75,6 @@ See the following table for download pages and version used for the following ex
 | Virtualbox | [Installers](https://www.virtualbox.org/wiki/Downloads)             | 7.1.4             |
 | Vagrant    | [Install commands](https://developer.hashicorp.com/vagrant/install) | 2.4.3             |
 
-
 ```shell
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
@@ -84,6 +83,7 @@ sudo apt-get install vagrant -y
 ```
 
 It seems like the install command on the VirtualBox website for RedHat based system got a typo in it - at least I needed to change it to the one below to make it work.
+
 ```lang:bash fold:true ln:true title:"Install commands on redhat-based systems"
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | rpm --import oracle_vbox_2016.asc
 sudo dnf update
@@ -95,10 +95,9 @@ Verify the successful installation of both tools by running these version query 
 * `vagrant --version`
 
 ## Prepare development environment
----
+
 While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`. 
 This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/molecule/releases/tag/v6.0.0) - it was removed intentional to get rid of the [Ansible-Galaxy](https://github.com/ansible/galaxy) dependency. By now you simply use the `role init` command to initialize an Ansible role and initialize a molecule scenario from within the role afterwards.
-
 
 ```shell
 ansible-galaxy role init example
@@ -138,9 +137,11 @@ Now you got a "molecule" directory inside the role containing a bunch of default
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)
 
 ## Hands-on-Example
-### Default Instance
 ---
+### Default Instance
+
 Creating a molecule instance is done by running `molecule create` if you do that right away from the roles root directory you will most likely encounter the following error:
+
 ```code
 ERROR    Computed fully qualified role name of sample does not follow current galaxy requirements.
 Please edit meta/main.yml and assure we can correctly determine full role name:
@@ -149,13 +150,16 @@ galaxy_info:
 role_name: my_name  # if absent directory name hosting role is used instead
 namespace: my_galaxy_namespace  # if absent, author is used instead
 ```
+
 This happens due to molecule running a [role name-check](https://ansible.readthedocs.io/projects/molecule/configuration/#role-name-check) by default.
 As stated in the documentation you can either disable the check or just add the `role_name` and `namespace` to the `meta/main.yml` file.
 
 Now running `molecule create` should, while throwing a bunch of warnings, already work.
 Running `molecule list` should now show this table.
+
 ```code
-	         ╷           ╷                ╷             ╷       ╷        Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
+             ╷           ╷                ╷             ╷       ╷        
+Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
   instance   │ default   │ ansible        │ default     │ true  │ false     
              ╵           ╵                ╵             ╵       ╵           
 ```
@@ -164,7 +168,8 @@ This will create a default instance using the [delegated driver](https://ansible
 As the title suggests we will go for Vagrant with VirtualBox as a provider in this example.
 So run `molecule destroy` to remove that default instance again.
 @@TODO explain ephermal environment
-Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected. 
+Then try running `molecule reset`
+`to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
 
 > [!warning]- Python traceback explanation
 > Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
@@ -174,7 +179,6 @@ If you run `molecule drivers` you should see a list of installed drivers includi
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
 ### Vagrant Instance
----
 
 ```yaml
 ---
@@ -208,7 +212,7 @@ verifier:
   enabled: True
 
 ...```
----
+
 You can find some explanation of all these settings in the [Ansible molecule docs](https://ansible.readthedocs.io/projects/molecule/getting-started/#inspecting-the-moleculeyml)
 > [!info]- VirtualBox Network Setup
 > Assigning a network-interface using a `192.168.56.X` address is crucial here.
@@ -230,7 +234,7 @@ mv molecule.yml molecule/default/molecule.yml
 mv converge.yml molecule/default/converge.yml
 mv verify.yml molecule/default/verify.yml
 ```
----
+
 @@ TODO research line number referencing in Ansible books
 Line 1: Initialize a new scenario using explicit parameters to use vagrant
 Line 2: The default `create.yml` file will cause connection issues on start-up so we fix this by copying the one from the molecule vagrant plugin itself
@@ -242,13 +246,12 @@ Line 7: Same goes for the `verify.yml` playbook
 
 Running `molecule ceate` and `molecule list` when it's done should now display a vagrant instance.
 ### Access Vagrant Instance
----
 
 Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a [bug](https://github.com/ansible-community/molecule-plugins/issues/239) and should be resolved with the next release.
 In the meantime you can run `vagrant global-status` to get the vagrant instance IDs and `vagrant ssh <id>` to log into one of the VMs displayed. Afterwards just type `exit` to drop out of the instance again.
 
 ### Provision a service
----
+
 After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner. We will use these tasks so set up an Apache web-server.
 This is just a very basic example for demonstration.
 
@@ -299,7 +302,6 @@ This is just a very basic example for demonstration.
     var: ansible_all_ipv4_addresses
 
 ...```
----
 
 Now replace the content of `tasks/main.yml` with these yaml tasks.
 
@@ -309,7 +311,7 @@ After this ran successfully you should be able to just copy the IP address displ
 Even tho this is nice, testing the functionality of this web-server manually isn't quite a scalable approach. It's time to set up automated testing for this role.
 
 ### Test Vagrant Instance
----
+
 We will use [Ansible for testing](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible) as well to stay with the default and to keep it simple. Another popular option for molecule testing is [testinfra](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra)
 Take a look now at these test tasks which should be self-explanatory due to their names.
 
@@ -351,10 +353,10 @@ Take a look now at these test tasks which should be self-explanatory due to thei
 
 ...
 ```
----
 
 Place these tasks into a file called `tests.yml` in the tasks directory to make them easily accessible.
 Now you should be able to run `molecule verify` to have these tests run against the VM.
 
 ## Vagrant
 Explain what gets saved where and how does the ephemeral directory work
+
