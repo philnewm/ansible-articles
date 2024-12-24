@@ -114,7 +114,7 @@ def map_reference_to_source(workflow_path:str, tokens:list[Token]):
             workflow_path=workflow_path,
             title=code_title,
             )
-            source_code_formatted = f"\n```{code_laguage}\n{source_code}```"
+            source_code_formatted = f"```{code_laguage}\n{source_code}```"
             code_reference = f"{token.markup}{token.info}\n{token.content}{token.markup}"
 
             code_map_list.append(CodeMap(reference=code_reference, source_code=source_code_formatted))
