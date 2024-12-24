@@ -3,6 +3,7 @@ import logic
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
+# TODO implement pre commit hook that enforces an empty line at the end of each file
 
 input_file: str = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
 workflow_path: str = "./.github/workflows/verify_getting_started.yml"
