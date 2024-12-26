@@ -9,7 +9,10 @@ tags:
 ---
 ## Intro
 
-After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [[#Prepare development environment]]
+After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [Prepare development environment](#prepare-development-environment)
+
+<!-- more -->
+
 So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by Vagrant using VirtualBox as provider.
 The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [[#Requirements]]
 
@@ -30,11 +33,11 @@ It does however support remote controlling [Windows hosts](https://docs.ansible.
 You will need python >= 3.10 to install the latest versions of all required python packages.
 Additional the python-venv and python-pip package will be required.
 Here just the example install command for Ubuntu22.04
-`sudo apt-get install python3.10 python3.10-venv python3.10-pip`
+`#!bash sudo apt-get install python3.10 python3.10-venv python3.10-pip`
 
-> [!tip] Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly recommended.
+!!! tip "Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly recommended."
 
-```shell
+```bash linenums="1" title="Create and activate Python virtual environment"
 python3.10 -m venv ~/.venv/ansible_env
 source ~/.venv/ansible_env/bin/activate
 ```
@@ -44,20 +47,20 @@ Next we need a bunch of python packages like Ansible, Molecule and its Vagrant p
 Create a project directory and `cd` into it.
 Create a `requirements.txt` file containing these lines:
 
-```shell
+```code linenums="1" title="requirements.txt"
 ansible==10.6.0
 molecule==24.9.0
 molecule-plugins[vagrant]
 docker==7.1.0
 ```
 
-> [!tip]- docker python packages
-> Installing the docker python package is only necessary due to a bug [#32540](https://github.com/ansible/molecule/issues/2540) in molecule plugins.
-> A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far. 
+??? info "docker python packages"
+    Installing the docker python package is only necessary due to a bug [#32540](https://github.com/ansible/molecule/issues/2540) in molecule plugins.
+    A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far.
 
 Now you can run upgrade pip (just to be sure) and install the requirements.
 
-```shell
+```bash linenums="1"
 python3.10 -m venv ~/.venv/ansible_env
 source ~/.venv/ansible_env/bin/activate
 ```
@@ -75,7 +78,7 @@ See the following table for download pages and version used for the following ex
 | Virtualbox | [Installers](https://www.virtualbox.org/wiki/Downloads)             | 7.1.4             |
 | Vagrant    | [Install commands](https://developer.hashicorp.com/vagrant/install) | 2.4.3             |
 
-```shell
+```bash linenums="1" title="Install vagrant on Debian based systems"
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt-get update
@@ -84,11 +87,20 @@ sudo apt-get install vagrant -y
 
 It seems like the install command on the VirtualBox website for RedHat based system got a typo in it - at least I needed to change it to the one below to make it work.
 
-```lang:bash fold:true ln:true title:"Install commands on redhat-based systems"
-wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | rpm --import oracle_vbox_2016.asc
-sudo dnf update
-sudo dnf install virtualbox-7.1 -y
-```
+??? example "VirtualBox install commands"
+    === "apt"
+        ```bash linenums="1" title="Install VirtualBox using apt"
+        sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list'
+        wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg --dearmor
+        sudo apt-get update
+        sudo apt-get install virtualbox-7.1 -y
+        ```
+    === "dnf"
+        ```bash linenums="1" title="Install VirtualBox using dnf"
+        wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | rpm --import oracle_vbox_2016.asc
+        sudo dnf update
+        sudo dnf install virtualbox-7.1 -y
+        ```
 
 Verify the successful installation of both tools by running these version query commands:
 
@@ -100,7 +112,7 @@ Verify the successful installation of both tools by running these version query 
 While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`.
 This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/molecule/releases/tag/v6.0.0) - it was removed intentional to get rid of the [Ansible-Galaxy](https://github.com/ansible/galaxy) dependency. By now you simply use the `role init` command to initialize an Ansible role and initialize a molecule scenario from within the role afterwards.
 
-```shell
+```bash linenums="1"
 ansible-galaxy role init example
 cd example
 molecule init scenario
@@ -109,31 +121,32 @@ molecule init scenario
 For now we'll just go with the *default* scenario to keep it simple.
 Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
-```code
-📦sample_role  
- ┣ 📂defaults  
- ┃ ┗ 📜main.yml  
- ┣ 📂files  
- ┣ 📂handlers  
- ┃ ┗ 📜main.yml  
- ┣ 📂meta  
- ┃ ┗ 📜main.yml  
- ┣ 📂molecule  
- ┃ ┗ 📂default  
- ┃   ┣ 📜converge.yml  
- ┃   ┣ 📜create.yml  
- ┃   ┣ 📜destroy.yml  
- ┃   ┗ 📜molecule.yml  
- ┣ 📂tasks  
- ┃ ┗ 📜main.yml  
- ┣ 📂templates  
- ┣ 📂tests  
- ┃ ┣ 📜inventory  
- ┃ ┗ 📜test.yml  
- ┣ 📂vars  
- ┃ ┗ 📜main.yml  
- ┗ 📜README.md
-```
+??? info "role directory structure"
+    ```code
+    📦sample_role  
+    ┣ 📂defaults  
+    ┃ ┗ 📜main.yml  
+    ┣ 📂files  
+    ┣ 📂handlers  
+    ┃ ┗ 📜main.yml  
+    ┣ 📂meta  
+    ┃ ┗ 📜main.yml  
+    ┣ 📂molecule  
+    ┃ ┗ 📂default  
+    ┃   ┣ 📜converge.yml  
+    ┃   ┣ 📜create.yml  
+    ┃   ┣ 📜destroy.yml  
+    ┃   ┗ 📜molecule.yml  
+    ┣ 📂tasks  
+    ┃ ┗ 📜main.yml  
+    ┣ 📂templates  
+    ┣ 📂tests  
+    ┃ ┣ 📜inventory  
+    ┃ ┗ 📜test.yml  
+    ┣ 📂vars  
+    ┃ ┗ 📜main.yml  
+    ┗ 📜README.md
+    ```
 
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)
 
@@ -158,13 +171,9 @@ As stated in the documentation you can either disable the check or just add the 
 Now running `molecule create` should, while throwing a bunch of warnings, already work.
 Running `molecule list` should now show this table.
 
-```code
-             ╷           ╷                ╷             ╷       ╷        
-Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged
- ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
-  instance   │ default   │ ansible        │ default     │ true  │ false     
-             ╵           ╵                ╵             ╵       ╵           
-```
+| Instance Name | Driver Name | Provisioner Name | Scenario Name | Created | Converged |
+| ------------- | ------------| ---------------- | ------------- | ------- | --------- |
+|   instance    |   default   |     ansible      |    default    |  true   |   false   |
 
 This will create a default instance using the [delegated driver](https://ansible.readthedocs.io/projects/molecule/configuration/#delegated), which is just called "default".
 As the title suggests we will go for Vagrant with VirtualBox as a provider in this example.
@@ -172,62 +181,62 @@ So run `molecule destroy` to remove that default instance again.
 @@TODO explain ephermal environment
 Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
 
-> [!warning]- Python traceback explanation
-> Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
-> Happens e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
+??? warning "Python traceback explanation"
+    Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
+    Happens e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
 
 If you run `molecule drivers` you should see a list of installed drivers including `vagrant`.
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
 ### Vagrant Instance
 
-```yaml
----
+??? example "Molecule Configuration"
+    ```yaml linenums="1" title="molecule.yml"
+    ---
 
-driver:
-  name: vagrant
-  provider:
-    name: virtualbox
-platforms:
-  # Defaults to Alpine Linux in case no box details are provided
-  - name: Alma9
-    box: almalinux/9
-    box_version: "9.5.20241203"
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.10"
-provisioner:
-  name: ansible
-  config_options:
-    defaults:
-      stdout_callback: debug
-      callbacks_enabled: ansible.posix.profile_tasks
-    env:
-      ANSIBLE_FORCE_COLOR: "true"
-verifier:
-  name: ansible
-  enabled: True
+    driver:
+      name: vagrant
+      provider:
+        name: virtualbox
+    platforms:
+      # Defaults to Alpine Linux in case no box details are provided
+      - name: Alma9
+        box: almalinux/9
+        box_version: "9.5.20241203"
+        memory: 2048
+        cpus: 2
+        interfaces:
+          - auto_config: true
+            network_name: private_network
+            type: "static"
+            ip: "192.168.56.10"
+    provisioner:
+      name: ansible
+      config_options:
+        defaults:
+          stdout_callback: debug
+          callbacks_enabled: ansible.posix.profile_tasks
+        env:
+          ANSIBLE_FORCE_COLOR: "true"
+    verifier:
+      name: ansible
+      enabled: True
 
-...
-```
+    ...
+    ```
 
 You can find some explanation of all these settings in the [Ansible molecule docs](https://ansible.readthedocs.io/projects/molecule/getting-started/#inspecting-the-moleculeyml)
-> [!info]- VirtualBox Network Setup
-> Assigning a network-interface using a `192.168.56.X` address is crucial here.
-> VirtualBox sets up two virtual networks  by default.
->
-> * vboxnet0 - which is Host-only using 192.168.56.1
-> * NatNetwork - using 10.0.2.X
->
-> NatNetwork will be used by default but requires port forwarding from the host to the VM to make it accessible from e.g. a browser on the host
-> To get around this we just assign a static address from the host-only network.
->
+??? info - VirtualBox Network Setup
+    Assigning a network-interface using a `192.168.56.X` address is crucial here.
+    VirtualBox sets up two virtual networks  by default.
 
-```shell
+    * vboxnet0 - which is Host-only using 192.168.56.1
+    * NatNetwork - using 10.0.2.X
+
+    NatNetwork will be used by default but requires port forwarding from the host to the VM to make it accessible from e.g. a browser on the host
+    To get around this we just assign a static address from the host-only network.
+
+```bash linenums="1"
 molecule init scenario default --driver-name vagrant --provisioner-name ansible
 cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/create.yml molecule/default/create.yml
 cp ~/.venv/ansible_env/lib/python3.10/site-packages/molecule_plugins/vagrant/playbooks/destroy.yml molecule/default/destroy.yml
@@ -258,53 +267,54 @@ In the meantime you can run `vagrant global-status` to get the vagrant instance 
 After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner. We will use these tasks so set up an Apache web-server.
 This is just a very basic example for demonstration.
 
-```yaml
----
+??? example "Apache install tasks"
+    ```yaml linenums="1" title="Ansible Tasks"
+    ---
 
-- name: Gather facts
-  ansible.builtin.gather_facts:
+    - name: Gather facts
+      ansible.builtin.gather_facts:
 
-- name: Install Apache web server
-  become: true
-  ansible.builtin.package:
-    name: httpd
-    state: present
+    - name: Install Apache web server
+      become: true
+      ansible.builtin.package:
+        name: httpd
+        state: present
 
-- name: Ensure Apache is started and enabled on boot
-  become: true
-  ansible.builtin.service:
-    name: "httpd"
-    state: "started"
-    enabled: true
+    - name: Ensure Apache is started and enabled on boot
+      become: true
+      ansible.builtin.service:
+        name: "httpd"
+        state: "started"
+        enabled: true
 
-- name: Create default index.html
-  become: true
-  ansible.builtin.copy:
-    content: |
-      <html>
-      <body>
-        <h1>Welcome to Apache on AlmaLinux!</h1>
-      </body>
-      </html>
-    dest: /var/www/html/index.html
-    owner: root
-    group: root
-    mode: '0644'
-  register: default_page
+    - name: Create default index.html
+      become: true
+      ansible.builtin.copy:
+        content: |
+          <html>
+          <body>
+            <h1>Welcome to Apache on AlmaLinux!</h1>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: '0644'
+      register: default_page
 
-- name: Restart Apache service
-  become: true
-  when: default_page.changed
-  ansible.builtin.service:
-    name: httpd
-    state: restarted
+    - name: Restart Apache service
+      become: true
+      when: default_page.changed
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
 
-- name: Display VM IP address
-  ansible.builtin.debug:
-    var: ansible_all_ipv4_addresses
+    - name: Display VM IP address
+      ansible.builtin.debug:
+        var: ansible_all_ipv4_addresses
 
-...
-```
+    ...
+    ```
 
 Now replace the content of `tasks/main.yml` with these yaml tasks.
 
@@ -318,43 +328,44 @@ Even tho this is nice, testing the functionality of this web-server manually isn
 We will use [Ansible for testing](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible) as well to stay with the default and to keep it simple. Another popular option for molecule testing is [testinfra](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra)
 Take a look now at these test tasks which should be self-explanatory due to their names.
 
-```yaml
----
+??? example "Ansible tests"
+    ```yaml linenums="1" title="Ansible Tests"
+    ---
 
-- name: Gather package facts
-  ansible.builtin.package_facts:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
 
-- name: Gather service facts
-  ansible.builtin.service_facts:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
 
-- name: Test Apache package is installed
-  ansible.builtin.assert:
-    that:
-      - "'httpd' in ansible_facts.packages"
-    fail_msg: "Apache package 'httpd' is not installed"
-    quiet: true
+    - name: Test Apache package is installed
+      ansible.builtin.assert:
+        that:
+          - "'httpd' in ansible_facts.packages"
+        fail_msg: "Apache package 'httpd' is not installed"
+        quiet: true
 
-- name: Test Apache service is running
-  ansible.builtin.assert:
-    that:
-      - ansible_facts.services['httpd.service'].state == 'running'
-    fail_msg: "Apache service is not running"
-    quiet: true
+    - name: Test Apache service is running
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['httpd.service'].state == 'running'
+        fail_msg: "Apache service is not running"
+        quiet: true
 
-- name: Query Apache default web page
-  ansible.builtin.uri:
-    url: "http://{{ ansible_all_ipv4_addresses[0] }}"
-  register: web_check
+    - name: Query Apache default web page
+      ansible.builtin.uri:
+        url: "http://{{ ansible_all_ipv4_addresses[0] }}"
+      register: web_check
 
-- name: Test Apache is reachable
-  ansible.builtin.assert:
-    that:
-      - web_check.status == 200
-    fail_msg: "Web server is not reachable or did not return status code 200"
-    success_msg: "Web server is reachable and returned status code 200"
+    - name: Test Apache is reachable
+      ansible.builtin.assert:
+        that:
+          - web_check.status == 200
+        fail_msg: "Web server is not reachable or did not return status code 200"
+        success_msg: "Web server is reachable and returned status code 200"
 
-...
-```
+    ...
+    ```
 
 Place these tasks into a file called `tests.yml` in the tasks directory to make them easily accessible.
 Now you should be able to run `molecule verify` to have these tests run against the VM.
