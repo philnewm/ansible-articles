@@ -63,4 +63,18 @@ ToDo:
 - [X] Enable code tabs for multiple code versions in on place in obsidian
 - [x] Enable callout conversion through mkdocs
 - [ ] Add admonition around code block if collapsible
-- [ ] Check [cross posting](https://dev.to/leewynne/how-to-cross-post-and-import-your-existing-blog-into-dev-and-retain-seo-original-source-and-ranking-mm8) options
+- [x] Check [cross posting](https://dev.to/leewynne/how-to-cross-post-and-import-your-existing-blog-into-dev-and-retain-seo-original-source-and-ranking-mm8) options
+
+## Cross-Posting Challenges
+
+Dev.to seems to support RSS feed based import - works to some extent
+Article gets cut off after a few lines
+
+Other then Dev.to and Medium both don't seem to support Callouts/admunitions at all.
+Getting same looks might not even be possible.
+
+Looks for now like cross posting using [API](https://hackernoon.com/how-to-use-python-to-publish-an-article-to-dev) is the best option while just excluding special formatting
+[CrossPost](https://github.com/shahednasser/cross-post) might make things a bit more easy
+
+for Dev.to implementing a mapping for callout syntax conversion might be the most straight forward approach combined with code replacement.
+
