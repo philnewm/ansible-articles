@@ -35,7 +35,7 @@ jobs:
 
       - name: Convert code blocks
         run: |
-          python ./src/markdown_parse.py
+          python src/markdown_parse.py
 
       - name: Deploy to GitHub-Pages
         run: |

@@ -1,6 +1,5 @@
 import yaml
 
-from markdown_it import MarkdownIt
 from markdown_it.token import Token
 from typing import NamedTuple
 

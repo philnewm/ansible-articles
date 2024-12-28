@@ -41,7 +41,7 @@ Here just the example install command for Ubuntu22.04
 
 ```reference
 title: "Create virtual environment"
-file: ./.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/run_code_snippets.yml
 start: 33
 end: "+1"
 language: shell
@@ -70,7 +70,7 @@ Now you can run upgrade pip (just to be sure) and install the requirements.
 
 ```reference
 title: "Create virtual environment"
-file: ./.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/run_code_snippets.yml
 start: 48
 end: "+1"
 language: shell
@@ -93,7 +93,7 @@ See the following table for download pages and version used for the following ex
 
 ```reference
 title: "Install vagrant on debian-based systems"
-file: ./.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/run_code_snippets.yml
 start: 68
 end: "+3"
 language: shell
@@ -132,7 +132,7 @@ This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/
 
 ```reference
 title: "Setup role and molecule scenario"
-file: ./.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/run_code_snippets.yml
 start: 79
 end: "+2"
 language: shell
@@ -234,7 +234,7 @@ You can find some explanation of all these settings in the [Ansible molecule doc
 
 ```reference
 title: "Initialize vagrant scenario"
-file: ./.github/workflows/verify_getting_started.yml
+file: ./.github/workflows/run_code_snippets.yml
 start: 139
 end: "+6"
 language: shell

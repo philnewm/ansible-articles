@@ -1,14 +1,22 @@
+import os
 import logic
 
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
+from pathlib import Path
 
 # TODO implement pre commit hook that enforces an empty line at the end of each file
 
-input_file: str = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
-workflow_path: str = "./.github/workflows/verify_getting_started.yml"
+
+# TODO make it run from src directory right away - doesn't work for worhflow file so far
+script_dir = Path(__file__).resolve().parent
+root_dir = script_dir.parent
+
+root_dir = script_dir.parent
+input_file = root_dir / "ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
+workflow_path = root_dir / ".github/workflows/run_code_snippets.yml"
+output_file = root_dir / "blog/docs/getting_started.md"
 md = MarkdownIt()
-output_file = "./blog/docs/getting_started.md"
 
 md_content = logic.read_file(input_file)
 tokens: list[Token] = md.parse(md_content)
