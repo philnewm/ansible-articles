@@ -59,7 +59,7 @@ def map_step_name_to_code(workflow_file: str, job_name: str) -> dict[str, str]:
     return {step["name"]: step.get("run") for step in steps}
 
 
-def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: Path, title: str):
+def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: str, title: str):
     """Get code either from file or workflow.
 
     Args:
@@ -83,7 +83,7 @@ def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: Pa
     return read_file(file_path=code_file)
 
 
-def map_reference_to_source(workflow_path:str, tokens:list[Token]):
+def map_reference_to_source(workflow_path:Path, tokens:list[Token]):
     """Map the code references to the source code they point to.
 
     Args:
@@ -111,7 +111,7 @@ def map_reference_to_source(workflow_path:str, tokens:list[Token]):
             source_code = get_code(
             code_file=file_path,
             step_to_code_map=step_to_code_map,
-            workflow_path=workflow_path,
+            workflow_path=workflow_path.name,
             title=code_title,
             )
             source_code_formatted = f"```{code_laguage}\n{source_code}```"
