@@ -1,6 +1,7 @@
 import yaml
 
 from markdown_it.token import Token
+from pathlib import Path
 from typing import NamedTuple
 
 
@@ -58,7 +59,7 @@ def map_step_name_to_code(workflow_file: str, job_name: str) -> dict[str, str]:
     return {step["name"]: step.get("run") for step in steps}
 
 
-def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: str, title: str):
+def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: Path, title: str):
     """Get code either from file or workflow.
 
     Args:
@@ -73,7 +74,7 @@ def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: st
         str: code as text
     """
     
-    if code_file == workflow_path:
+    if code_file.endswith(workflow_path.name):
         if title not in step_to_code_map.keys():
             raise ValueError(f"Couldn't find step name '{title}' in workflow")
 
