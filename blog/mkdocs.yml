@@ -44,7 +44,7 @@ plugins:
       image: https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png
       json_feed_enabled: true
       length: 20
-      match_path: blog/docs/.*
+      match_path: .*
       pretty_print: false
       rss_feed_enabled: true
       url_parameters:
