@@ -73,8 +73,8 @@ def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: st
     Returns:
         str: code as text
     """
-    
-    if code_file.endswith(workflow_path.name):
+
+    if code_file.endswith(workflow_path):
         if title not in step_to_code_map.keys():
             raise ValueError(f"Couldn't find step name '{title}' in workflow")
 
