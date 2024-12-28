@@ -1,6 +1,6 @@
 ---
 
-name: Deploy to GitHub-Pages
+name: Start GitHub-Pages Deployment
 
 on:
   workflow_run:

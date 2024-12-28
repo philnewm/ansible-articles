@@ -23,7 +23,7 @@ plugins:
   - search
   - obsidian-support
   - rss:
-      abstract_chars_count: 160  # -1 for full content
+      abstract_chars_count: -1  # -1 for full content
       abstract_delimiter: <!-- more -->
       categories:
         - categories
