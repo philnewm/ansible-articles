@@ -37,7 +37,7 @@ jobs:
         run: |
           python src/markdown_parse.py
 
-      - name: Deploy to GitHub-Pages
+      - name: Start deployment process
         run: |
           mkdocs gh-deploy --config-file mkdocs.yml --remote-branch gh-pages --message "[Automate] deploy pages"--force
         working-directory:  ./blog
