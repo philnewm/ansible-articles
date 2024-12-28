@@ -12,8 +12,6 @@ tags:
 After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [Prepare development environment](#prepare-development-environment).
 @@TODO make inline markdown style links work in obsidian.
 
-<!-- more -->
-
 So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by Vagrant using VirtualBox as provider.
 The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [Requirements](#requirements)
 
