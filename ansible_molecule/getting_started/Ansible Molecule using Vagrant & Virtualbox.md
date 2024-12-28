@@ -9,10 +9,15 @@ tags:
 ---
 ## Intro
 
-After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [[#Prepare development environment]]
-So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by Vagrant using VirtualBox as provider.
-The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [[#Requirements]]
+After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [Prepare development environment](#prepare-development-environment).
+@@TODO make inline markdown style links work in obsidian.
 
+<!-- more -->
+
+So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by Vagrant using VirtualBox as provider.
+The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [Requirements](#requirements)
+
+@@TODO figure out rules for separator placement
 ## Requirements
 ---
 ### System
@@ -59,7 +64,7 @@ ln: true
 
 > [!tip]- docker python packages
 > Installing the docker python package is only necessary due to a bug [#32540](https://github.com/ansible/molecule/issues/2540) in molecule plugins.
-> A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far. 
+> A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far.
 
 Now you can run upgrade pip (just to be sure) and install the requirements.
 
@@ -98,16 +103,27 @@ ln: true
 
 It seems like the install command on the VirtualBox website for RedHat based system got a typo in it - at least I needed to change it to the one below to make it work.
 
-```lang:bash fold:true ln:true title:"Install commands on redhat-based systems"
+~~~tabs
+---tab apt-get
+```bash linenums="1" title="Install on Debian-based systems"
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list'
+wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg --dearmor
+sudo apt-get update
+sudo apt-get install virtualbox-7.1 -y
+```
+---tab dnf
+```bash linenums="1" title="Install on RedHat-based systems"
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | rpm --import oracle_vbox_2016.asc
 sudo dnf update
 sudo dnf install virtualbox-7.1 -y
 ```
+~~~
 
-Verify the successful installation of both tools by running these version query commands:
-
-* `VBoxManage --version`
-* `vagrant --version`
+Verify the successful installation of both tools by checking their version.
+```bash linenums="1"
+VBoxManage --version
+vagrant --version
+```
 
 ## Prepare development environment
 
@@ -127,7 +143,7 @@ ln: true
 For now we'll just go with the *default* scenario to keep it simple.
 Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
-```code
+```code title="Role Structure"
 📦sample_role  
  ┣ 📂defaults  
  ┃ ┗ 📜main.yml  
@@ -176,26 +192,24 @@ As stated in the documentation you can either disable the check or just add the 
 Now running `molecule create` should, while throwing a bunch of warnings, already work.
 Running `molecule list` should now show this table.
 
-```code
-             ╷           ╷                ╷             ╷       ╷        
-Instance Name│Driver Name│Provisioner Name│Scenario Name│Created│Converged ─────────────┼───────────┼────────────────┼─────────────┼───────┼───────────
-  instance   │ default   │ ansible        │ default     │ true  │ false     
-             ╵           ╵                ╵             ╵       ╵           
-```
+| Instance Name | Driver Name | Provisioner Name | Scenario Name | Created | Converged |
+| ------------- | ----------- | ---------------- | ------------- | ------- | --------- |
+| instance      | default     | ansible          | default       | true    | false     |
 
 This will create a default instance using the [delegated driver](https://ansible.readthedocs.io/projects/molecule/configuration/#delegated), which is just called "default".
-As the title suggests we will go for Vagrant with VirtualBox as a provider in this example.
+As the title suggests we will use Vagrant as driver with VirtualBox as a provider in this example.
 So run `molecule destroy` to remove that default instance again.
-@@TODO explain ephermal environment
-Then try running `molecule reset` to reset or delete the scenario cache at `~/.cache/molecule/<role-name>/<scenario-name>`. This might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
-
-> [!warning]- Python traceback explanation
-> Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
-> Happens e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
-
 If you run `molecule drivers` you should see a list of installed drivers including `vagrant`.
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
+### Cleaning up
+Molecule stores all instance related data in a so called *ephermal directory* and removes it when running `molecule reset`.
+It's placed at `~/.cache/molecule/<role-name>/<scenario-name>` by default and usually gets displayed during instance creation @@TODO check instance creation output. 
+Running `molecule reset` might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
+
+> [!warning]- Python traceback explanation for `molecule reset`
+> Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
+> Happens e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
 ### Vagrant Instance
 
 ```reference

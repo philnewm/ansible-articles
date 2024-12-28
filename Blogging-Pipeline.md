@@ -21,6 +21,7 @@
 * [foam](https://foambubble.github.io/foam/)
 * [second-brain-automation](https://medium.com/design-bootcamp/automating-my-second-brain-how-technology-makes-information-management-effortless-afb2a1e4ab11)
 * [obsidian export](https://github.com/zoni/obsidian-export)
+* [obsidian plugin](https://github.com/ndy2/mkdocs-obsidian-support-plugin) for mkdocs
 
 ## Pipeline-Approach
 * Write markdown files locally in obsidian
@@ -59,5 +60,7 @@ ToDo:
 * Enhance code blocks to display language, title + collapsible
 
 ## Formatting ToDos
-* Enable code tabs for multiple code versions in on place in obsidian
-* Enable callout conversion through mkdocs
+- [X] Enable code tabs for multiple code versions in on place in obsidian
+- [x] Enable callout conversion through mkdocs
+- [ ] Add admonition around code block if collapsible
+- [ ] Check [cross posting](https://dev.to/leewynne/how-to-cross-post-and-import-your-existing-blog-into-dev-and-retain-seo-original-source-and-ranking-mm8) options

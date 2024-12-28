@@ -1,6 +1,0 @@
-[submodule "philblog/themes/hugo-pure"]
-	path = philblog/themes/hugo-pure
-	url = https://github.com/undus5/hugo-pure
-[submodule "philblog/themes/terminal"]
-	path = philblog/themes/terminal
-	url = https://github.com/panr/hugo-theme-terminal.git

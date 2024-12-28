@@ -8,7 +8,7 @@ from markdown_it.token import Token
 input_file: str = "./ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
 workflow_path: str = "./.github/workflows/verify_getting_started.yml"
 md = MarkdownIt()
-output_file = "output.md"
+output_file = "./blog/docs/getting_started.md"
 
 md_content = logic.read_file(input_file)
 tokens: list[Token] = md.parse(md_content)

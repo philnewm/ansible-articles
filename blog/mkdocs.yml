@@ -16,3 +16,7 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.tabbed:
       alternate_style: true
+
+plugins:
+  - search
+  - obsidian-support
