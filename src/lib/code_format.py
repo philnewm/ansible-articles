@@ -10,7 +10,7 @@ class CodeMap(NamedTuple):
     source_code: str
 
 
-def read_file(file_path: str):
+def read_file(file_path: str) -> str:
     """Read a text file
 
     Args:
@@ -21,12 +21,12 @@ def read_file(file_path: str):
     """
 
     with open(file_path, "r") as file:
-        content = file.read()
+        content: str = file.read()
     
     return content
 
 
-def write_file(file_path: str, content: str):
+def write_file(file_path: str, content: str) -> None:
     """Write a text file
 
     Args:
@@ -34,7 +34,7 @@ def write_file(file_path: str, content: str):
         content (str): Content to write
     """
 
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding="utf-8") as file:
         file.write(content)
 
 
@@ -104,9 +104,9 @@ def map_reference_to_source(workflow_path:Path, tokens:list[Token]):
     for token in tokens:
         if token.type == "fence" and token.info=="reference":
             reference_dict: dict[str, str] = yaml.safe_load(token.content)
-            file_path = reference_dict["file"]
-            code_title = reference_dict["title"]
-            code_laguage = reference_dict["language"]
+            file_path: str = reference_dict["file"]
+            code_title: str = reference_dict["title"]
+            code_laguage: str = reference_dict["language"]
 
             source_code = get_code(
             code_file=file_path,
@@ -122,7 +122,7 @@ def map_reference_to_source(workflow_path:Path, tokens:list[Token]):
     return code_map_list
 
 
-def update_text(source_text: str, code_map_list:list[CodeMap]):
+def update_text(source_text: str, code_map_list:list[CodeMap]) -> str:
     """Repalce source text with referenced code.
 
     Args:

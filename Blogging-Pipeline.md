@@ -78,3 +78,18 @@ Looks for now like cross posting using [API](https://hackernoon.com/how-to-use-p
 
 for Dev.to implementing a mapping for callout syntax conversion might be the most straight forward approach combined with code replacement.
 
+Seems like medium [doesn't allow](https://help.medium.com/hc/en-us/articles/213480228-API-Importing) any new API access
+
+Dev.to post [api](https://vrite.io/blog/next-level-technical-blogging-with-dev-to-api/)
+
+```code
+title?: string;
+body_markdown?: string;
+published?: boolean;
+series?: string | null;
+main_image?: string | null;
+canonical_url?: string | null;
+description?: string;
+tags?: string[];
+organization_id?: number | null;
+```
