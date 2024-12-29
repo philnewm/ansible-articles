@@ -2,10 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://philnewm.github.io/ansible-articles/getting_started/</loc>
-         <lastmod>2024-12-28</lastmod>
+         <lastmod>2024-12-29</lastmod>
+    </url>
+    <url>
+         <loc>https://philnewm.github.io/ansible-articles/getting_started/devto_test/</loc>
+         <lastmod>2024-12-29</lastmod>
     </url>
     <url>
          <loc>https://philnewm.github.io/ansible-articles/getting_started/getting_started/</loc>
-         <lastmod>2024-12-28</lastmod>
+         <lastmod>2024-12-29</lastmod>
     </url>
 </urlset>
