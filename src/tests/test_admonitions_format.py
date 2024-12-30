@@ -1,6 +1,6 @@
 import pytest
 
-from lib.admonitions_format import build_admonitions_list
+from lib.admonition import admonitions
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def test_format_admonitions_for_dev_to(
     expected_result: str = admonitions_devto
     result: str = admonitions_obsidian
 
-    for admonition in build_admonitions_list():
+    for admonition in admonitions:
         result: str = result.replace(admonition.obsidian, admonition.devto)
 
     assert expected_result == result
