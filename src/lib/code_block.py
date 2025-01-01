@@ -48,15 +48,14 @@ def parse_workflow_code(reference_meta: CodeReferenceMeta, jobs: list[str]) -> s
     """Get code either from file or workflow.
 
     Args:
-        code_file (str): file path
-        workflow_path (str): Relevant workflow path
-        title (str): Step name to look for
+        reference_meta (CodeReferenceMeta): Reference meta object
+        jobs (list[str]): List of jobs from the workflow file
 
     Raises:
         ValueError: In case the step name wasn't found in the workflow.
 
     Returns:
-        str: code as text
+        str: Step name from workflow
     """
 
     if reference_meta.title not in jobs:
@@ -68,6 +67,14 @@ def parse_workflow_code(reference_meta: CodeReferenceMeta, jobs: list[str]) -> s
 
 
 def get_reference_values(token: Token) -> CodeReferenceMeta:
+    """Extract meta values from code reference blocks
+
+    Args:
+        token (Token): Markdown token
+
+    Returns:
+        CodeReferenceMeta: Code reference object 
+    """
     reference_dict: dict[str, str] = yaml.safe_load(token.content)
 
     return CodeReferenceMeta(
