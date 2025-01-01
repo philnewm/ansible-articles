@@ -1,60 +1,29 @@
 import yaml
+import io
 
 from markdown_it.token import Token
 from pathlib import Path
 from typing import NamedTuple
-
 
 class CodeMap(NamedTuple):
     reference: str
     source_code: str
 
 
-def read_file(file_path: str) -> str:
-    """Read a text file
-
-    Args:
-        input_file (str): Path to file
-
-    Returns:
-        str: file content
-    """
-
-    with open(file_path, "r") as file:
-        content: str = file.read()
-    
-    return content
-
-
-def write_file(file_path: str, content: str) -> None:
-    """Write a text file
-
-    Args:
-        file_path (str): Path to write to
-        content (str): Content to write
-    """
-
-    with open(file_path, "w", encoding="utf-8") as file:
-        file.write(content)
-
-
-def map_step_name_to_code(workflow_file: str, job_name: str) -> dict[str, str]:
-    """Convert a Github Actions job from yaml format to a dictionary.
+def map_step_name_to_code(gh_workflow: dict[str, dict], job_name: str) -> dict[str, str]:
+    """Convert a Github Actions job dictionary to a step to code dictionary.
     
     Converts a GitHub Actions job steps to a {step-name: run-code} dictionary.
 
     Args:
-        workflow_file (str): Yaml file containing a Github Actions workflow
+        gh_workflow (dict[str, dict]): Dictionary of Yaml content of a Github Actions workflow
         job_name (str): Job name to use as source
 
     Returns:
         dict[str, str]: Step-name as key and Step run-code as value
     """
 
-    with open(workflow_file, "r") as file:
-        yaml_content = yaml.safe_load(file)
-
-    steps: dict[str, str] = yaml_content["jobs"][job_name]["steps"]
+    steps: dict[str, str] = gh_workflow["jobs"][job_name]["steps"]
 
     return {step["name"]: step.get("run") for step in steps}
 
@@ -80,10 +49,10 @@ def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: st
 
         return step_to_code_map[title]
 
-    return read_file(file_path=code_file)
+    return io.read_file(file_path=code_file)
 
 
-def map_reference_to_source(workflow_path:Path, tokens:list[Token]):
+def map_reference_to_source(workflow_path:Path, tokens:list[Token], step_to_code_map:dict[str, str]) -> list[NamedTuple]:
     """Map the code references to the source code they point to.
 
     Args:
@@ -95,11 +64,6 @@ def map_reference_to_source(workflow_path:Path, tokens:list[Token]):
     """
 
     code_map_list: list[NamedTuple] = []
-
-    step_to_code_map:dict[str, str] = map_step_name_to_code(
-        workflow_file=workflow_path,
-        job_name="molecule-setup-ci",
-    )
 
     for token in tokens:
         if token.type == "fence" and token.info=="reference":
@@ -114,8 +78,8 @@ def map_reference_to_source(workflow_path:Path, tokens:list[Token]):
             workflow_path=workflow_path.name,
             title=code_title,
             )
-            source_code_formatted = f"```{code_laguage}\n{source_code}```"
-            code_reference = f"{token.markup}{token.info}\n{token.content}{token.markup}"
+            source_code_formatted: str = f"```{code_laguage}\n{source_code}```"
+            code_reference: str = f"{token.markup}{token.info}\n{token.content}{token.markup}"
 
             code_map_list.append(CodeMap(reference=code_reference, source_code=source_code_formatted))
 
@@ -133,8 +97,8 @@ def update_text(source_text: str, code_map_list:list[CodeMap]) -> str:
         str: Updated text output
     """
 
-    export_content = source_text
+    export_content: str = source_text
     for CodeMap in code_map_list:
-        export_content = export_content.replace(CodeMap.reference, CodeMap.source_code)
+        export_content: str = export_content.replace(CodeMap.reference, CodeMap.source_code)
 
     return export_content
