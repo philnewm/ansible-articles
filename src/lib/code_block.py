@@ -1,13 +1,29 @@
+from tokenize import Name
 import yaml
 import io
+import logging
 
 from markdown_it.token import Token
 from pathlib import Path
-from typing import NamedTuple
+from typing import NamedTuple, Any
+
+
+log = logging.Logger(__file__)
+
+
+workflow_paths: list[str] = [
+    "run_code_snippets.yml",
+]
 
 class CodeMap(NamedTuple):
     reference: str
     source_code: str
+
+
+class CodeReferenceMeta(NamedTuple):
+    file_path: Path
+    title: str
+    language: str
 
 
 def map_step_name_to_code(gh_workflow: dict[str, dict], job_name: str) -> dict[str, str]:
@@ -28,7 +44,7 @@ def map_step_name_to_code(gh_workflow: dict[str, dict], job_name: str) -> dict[s
     return {step["name"]: step.get("run") for step in steps}
 
 
-def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: str, title: str):
+def get_code(reference_meta: CodeReferenceMeta, workflow_paths: list[str], jobs: list[str]):
     """Get code either from file or workflow.
 
     Args:
@@ -43,13 +59,26 @@ def get_code(code_file: str, step_to_code_map: dict[str, str], workflow_path: st
         str: code as text
     """
 
-    if code_file.endswith(workflow_path):
-        if title not in step_to_code_map.keys():
-            raise ValueError(f"Couldn't find step name '{title}' in workflow")
+    if reference_meta.file_path.name in workflow_paths:
+        if reference_meta.title not in jobs:
+            raise ValueError(f"Couldn't find step name '{reference_meta.title}' in workflow")
 
-        return step_to_code_map[title]
+        return reference_meta.title
 
-    return io.read_file(file_path=code_file)
+    return io.read_file(file_path=reference_meta.file_path)
+
+
+
+
+
+def get_reference_values(token: Token) -> CodeReferenceMeta:
+    reference_dict: dict[str, str] = yaml.safe_load(token.content)
+    
+    return CodeReferenceMeta(
+        file_path=reference_dict["file"],
+        title=reference_dict["title"],
+        language=reference_dict["language"],
+        )
 
 
 def map_reference_to_source(workflow_path:Path, tokens:list[Token], step_to_code_map:dict[str, str]) -> list[NamedTuple]:
@@ -65,20 +94,17 @@ def map_reference_to_source(workflow_path:Path, tokens:list[Token], step_to_code
 
     code_map_list: list[NamedTuple] = []
 
+    # ToDo Implement blog dataclass to hold
+
     for token in tokens:
         if token.type == "fence" and token.info=="reference":
-            reference_dict: dict[str, str] = yaml.safe_load(token.content)
-            file_path: str = reference_dict["file"]
-            code_title: str = reference_dict["title"]
-            code_laguage: str = reference_dict["language"]
-
+            ref_meta: CodeReferenceMeta = get_reference_values(token=token)
             source_code = get_code(
-            code_file=file_path,
-            step_to_code_map=step_to_code_map,
-            workflow_path=workflow_path.name,
-            title=code_title,
+            reference_meta=ref_meta,
+            workflow_paths=workflow_paths,
+            jobs=step_to_code_map.keys()
             )
-            source_code_formatted: str = f"```{code_laguage}\n{source_code}```"
+            source_code_formatted: str = f"```{ref_meta.language}\n{source_code}```"
             code_reference: str = f"{token.markup}{token.info}\n{token.content}{token.markup}"
 
             code_map_list.append(CodeMap(reference=code_reference, source_code=source_code_formatted))

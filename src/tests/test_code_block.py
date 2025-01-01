@@ -1,3 +1,4 @@
+from pathlib import Path
 import pytest
 
 from src.lib import code_block
@@ -43,4 +44,13 @@ def test_map_step_name_to_code(test_workflow: dict[str, dict]) -> None:
     result: dict[str, str] = code_block.map_step_name_to_code(gh_workflow=test_workflow, job_name="test_job")
 
     assert isinstance(result, dict)
+    assert expected_result == result
+
+
+def test_get_code(tmp_path: Path) -> None:
+    workflow_file:str = "test_workflow.yml"
+    code_reference:Path = tmp_path / workflow_file
+
+    result = code_block.get_code(file_path=code_reference)
+    assert isinstance(result, str)
     assert expected_result == result
