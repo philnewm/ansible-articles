@@ -1,6 +1,8 @@
 from pathlib import Path
+from typing import NamedTuple
 
 import pytest
+import yaml
 
 from src.lib import code_block
 
@@ -54,6 +56,11 @@ def test_parse_workflow_code(
     code_ref_meta_workflow: code_block.CodeReferenceMeta,
     test_workflow: dict[str, dict[str, dict[str, list[dict[str, str]]]]],
 ) -> None:
+    """
+    Given code reference meta data and test workflow data
+    When running parse_workflow_code
+    Than provide the queried code as a string
+    """
 
     step_to_code_map: dict[str, str] = code_block.map_step_name_to_code(
         gh_workflow=test_workflow,
@@ -69,3 +76,32 @@ def test_parse_workflow_code(
 
     assert isinstance(result, str)
     assert expected_result == result
+
+
+# TODO move non-test related code out of here
+class TestToken(NamedTuple):
+    __test__ = False
+    content: str
+
+
+@pytest.fixture
+def test_token() -> TestToken:
+    test_token = TestToken(content="'file': 'path/to/test/file.yml'\ntitle: 'Test Title'\n'language': 'bash'")
+
+    return test_token
+
+
+def test_get_reference_values(test_token: TestToken) -> None:
+    """
+    Given a token includign testing data
+    When running get_reference_values
+    Than expect a CodeReferenceMetaData object containing the keys file, title, language 
+    """
+
+    expected_result: dict[str, str] = yaml.safe_load(test_token.content)
+    result: code_block.CodeReferenceMeta = code_block.get_reference_values(token=test_token)
+
+    assert isinstance(result, code_block.CodeReferenceMeta)
+    assert expected_result["file"] == result.file_path
+    assert expected_result["title"] == result.title
+    assert expected_result["language"] == result.language

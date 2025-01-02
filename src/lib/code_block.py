@@ -78,7 +78,7 @@ def get_reference_values(token: Token) -> CodeReferenceMeta:
     reference_dict: dict[str, str] = yaml.safe_load(token.content)
 
     return CodeReferenceMeta(
-        file_path=reference_dict["file"],
+        file_path=Path(reference_dict["file"]),
         title=reference_dict["title"],
         language=reference_dict["language"],
     )
@@ -90,7 +90,7 @@ def map_reference_to_source(
     """Map the code references to the source code they point to.
 
     Args:
-        workflow_path (str): Path to GitHub Action workflow
+        workflow_path (Path): Path to GitHub Action workflow
         tokens (list[Tokens]): Token list from parsed markdown file
 
     Returns:
@@ -107,10 +107,11 @@ def map_reference_to_source(
             source_code: str = file.read_file(ref_meta.file_path)
 
             if ref_meta.file_path.name in workflow_paths:
-                source_code = parse_workflow_code(
+                snippet_name: str = parse_workflow_code(
                     reference_meta=ref_meta,
                     jobs=step_to_code_map.keys()
                 )
+                source_code = step_to_code_map[snippet_name]
 
             source_code_formatted: str = f"```{ref_meta.language}\n{source_code}```"
             code_reference: str = (

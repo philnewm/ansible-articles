@@ -3,6 +3,8 @@ from markdown_it import MarkdownIt
 from markdown_it.token import Token
 from pathlib import Path
 
+import yaml
+
 # TODO implement pre commit hook that enforces an empty line at the end of each file
 
 
@@ -11,11 +13,16 @@ script_dir: Path = Path(__file__).resolve().parent
 root_dir: Path = script_dir.parent
 
 root_dir = script_dir.parent
-input_file: Path = root_dir / "ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
-workflow_path: Path = root_dir / ".github/workflows/run_code_snippets.yml"
-output_file: Path = root_dir / "blog/docs/devto_test.md"
+input_file: Path = root_dir / "ansible-articles/ansible_molecule/getting_started/Ansible Molecule using Vagrant & Virtualbox.md"
+workflow_path: Path = root_dir / "ansible-articles/.github/workflows/run_code_snippets.yml"
+output_file: Path = root_dir / "ansible-articles/blog/docs/devto_test.md"
+
+# TODO clean this part up
+with open(file=str(workflow_path), mode="r") as f:
+    workflow: str = f.read()
+
 step_to_code_map:dict[str, str] = code_block.map_step_name_to_code(
-        gh_workflow=workflow_path,
+        gh_workflow=yaml.safe_load(workflow),
         job_name="molecule-setup-ci",
     )
 
