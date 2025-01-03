@@ -6,8 +6,9 @@ tags:
   - blog
 ---
 # Getting started with Ansible Molecule
----
+
 ## Intro
+---
 
 After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [Prepare development environment](#prepare-development-environment).
 @@TODO make inline markdown style links work in obsidian.
@@ -110,6 +111,7 @@ vagrant --version
 ```
 
 ## Prepare development environment
+---
 
 While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`.
 This one doesn't exist anymore since version [6.0.0](https://github.com/ansible/molecule/releases/tag/v6.0.0) - it was removed intentional to get rid of the [Ansible-Galaxy](https://github.com/ansible/galaxy) dependency. By now you simply use the `role init` command to initialize an Ansible role and initialize a molecule scenario from within the role afterwards.
@@ -151,7 +153,7 @@ Now you got a "molecule" directory inside the role containing a bunch of default
 
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)
 
-## Hands-on-Example
+## Instance Creation
 ---
 ### Default Instance
 
@@ -264,8 +266,8 @@ Running `molecule ceate` and `molecule list` when it's done should now display a
 Accessing an instance is supposed to be done by running `molecule login`, this is currently not working due to a [bug](https://github.com/ansible-community/molecule-plugins/issues/239) and should be resolved with the next release.
 In the meantime you can run `vagrant global-status` to get the vagrant instance IDs and `vagrant ssh <id>` to log into one of the VMs displayed. Afterwards just type `exit` to drop out of the instance again.
 
-### Provision a service
-
+## Provision a service
+---
 After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner. We will use these tasks so set up an Apache web-server.
 This is just a very basic example for demonstration.
 
@@ -324,7 +326,8 @@ After this ran successfully you should be able to just copy the IP address displ
 
 Even tho this is nice, testing the functionality of this web-server manually isn't quite a scalable approach. It's time to set up automated testing for this role.
 
-### Test Vagrant Instance
+## Test Vagrant Instance
+---
 
 We will use [Ansible for testing](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible) as well to stay with the default and to keep it simple. Another popular option for molecule testing is [testinfra](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra)
 Take a look now at these test tasks which should be self-explanatory due to their names.
