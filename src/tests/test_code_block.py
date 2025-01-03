@@ -102,6 +102,6 @@ def test_get_reference_values(test_token: TestToken) -> None:
     result: code_block.CodeReferenceMeta = code_block.get_reference_values(token=test_token)
 
     assert isinstance(result, code_block.CodeReferenceMeta)
-    assert expected_result["file"] == result.file_path
+    assert expected_result["file"] == result.file_path.as_posix()
     assert expected_result["title"] == result.title
     assert expected_result["language"] == result.language
