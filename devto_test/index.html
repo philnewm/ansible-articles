@@ -324,13 +324,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hands-on-example" class="md-nav__link">
+  <a href="#instance-creation" class="md-nav__link">
     <span class="md-ellipsis">
-      Hands-on-Example
+      Instance Creation
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Hands-on-Example">
+    <nav class="md-nav" aria-label="Instance Creation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -369,7 +369,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#provision-a-service" class="md-nav__link">
     <span class="md-ellipsis">
       Provision a service
@@ -377,18 +382,13 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#test-vagrant-instance" class="md-nav__link">
     <span class="md-ellipsis">
       Test Vagrant Instance
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -516,13 +516,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hands-on-example" class="md-nav__link">
+  <a href="#instance-creation" class="md-nav__link">
     <span class="md-ellipsis">
-      Hands-on-Example
+      Instance Creation
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Hands-on-Example">
+    <nav class="md-nav" aria-label="Instance Creation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -561,7 +561,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#provision-a-service" class="md-nav__link">
     <span class="md-ellipsis">
       Provision a service
@@ -569,18 +574,13 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#test-vagrant-instance" class="md-nav__link">
     <span class="md-ellipsis">
       Test Vagrant Instance
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -609,8 +609,8 @@
 
 
 <h1 id="getting-started-with-ansible-molecule">Getting started with Ansible Molecule</h1>
-<hr />
 <h2 id="intro">Intro</h2>
+<hr />
 <p>After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in <a href="#prepare-development-environment">Prepare development environment</a>.
 @@TODO make inline markdown style links work in obsidian.</p>
 <p>So this is a guide on setting up Ansible Molecule for testing Ansible roles by running them against virtual machines. These virtual machines will be controlled by Vagrant using VirtualBox as provider.
@@ -713,6 +713,7 @@ See the following table for download pages and version used for the following ex
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a>vagrant<span class="w"> </span>--version
 </span></code></pre></div></td></tr></table></div></p>
 <h2 id="prepare-development-environment">Prepare development environment</h2>
+<hr />
 <p>While I was trying to understand molecule I came across many guides mentioning the command <code>molecule role init</code>.
 This one doesn't exist anymore since version <a href="https://github.com/ansible/molecule/releases/tag/v6.0.0">6.0.0</a> - it was removed intentional to get rid of the <a href="https://github.com/ansible/galaxy">Ansible-Galaxy</a> dependency. By now you simply use the <code>role init</code> command to initialize an Ansible role and initialize a molecule scenario from within the role afterwards.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>init<span class="w"> </span>example
@@ -746,7 +747,7 @@ Now you got a "molecule" directory inside the role containing a bunch of default
 </span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a> ┗ 📜README.md
 </span></code></pre></div>
 <p>For details about how each file and directory inside this role structure is supposed to be used see the <a href="https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure">Ansible documentation</a></p>
-<h2 id="hands-on-example">Hands-on-Example</h2>
+<h2 id="instance-creation">Instance Creation</h2>
 <hr />
 <h3 id="default-instance">Default Instance</h3>
 <p>Creating a molecule instance is done by running <code>molecule create</code> if you do that right away from the roles root directory you will most likely encounter the following error:</p>
@@ -863,7 +864,8 @@ Line 7: Same goes for the <code>verify.yml</code> playbook</p>
 <h3 id="access-vagrant-instance">Access Vagrant Instance</h3>
 <p>Accessing an instance is supposed to be done by running <code>molecule login</code>, this is currently not working due to a <a href="https://github.com/ansible-community/molecule-plugins/issues/239">bug</a> and should be resolved with the next release.
 In the meantime you can run <code>vagrant global-status</code> to get the vagrant instance IDs and <code>vagrant ssh &lt;id&gt;</code> to log into one of the VMs displayed. Afterwards just type <code>exit</code> to drop out of the instance again.</p>
-<h3 id="provision-a-service">Provision a service</h3>
+<h2 id="provision-a-service">Provision a service</h2>
+<hr />
 <p>After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner. We will use these tasks so set up an Apache web-server.
 This is just a very basic example for demonstration.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nn">---</span>
@@ -916,7 +918,8 @@ This is just a very basic example for demonstration.</p>
 <p>Next run <code>molecule converge</code> to run these tasks against the VirtualBox VM.
 After this ran successfully you should be able to just copy the IP address displayed by the debug task e.g. <code>192.168.56.10</code> to your browser and see the default Apache web-server page right away.</p>
 <p>Even tho this is nice, testing the functionality of this web-server manually isn't quite a scalable approach. It's time to set up automated testing for this role.</p>
-<h3 id="test-vagrant-instance">Test Vagrant Instance</h3>
+<h2 id="test-vagrant-instance">Test Vagrant Instance</h2>
+<hr />
 <p>We will use <a href="https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible">Ansible for testing</a> as well to stay with the default and to keep it simple. Another popular option for molecule testing is <a href="https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra">testinfra</a>
 Take a look now at these test tasks which should be self-explanatory due to their names.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nn">---</span>
