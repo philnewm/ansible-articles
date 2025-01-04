@@ -126,29 +126,29 @@ For now we'll just go with the *default* scenario to keep it simple.
 Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
 ```code title="Role Structure"
-ðŸ“¦sample_role  
- â”£ ðŸ“‚defaults  
- â”ƒ â”— ðŸ“œmain.yml  
- â”£ ðŸ“‚files  
- â”£ ðŸ“‚handlers  
- â”ƒ â”— ðŸ“œmain.yml  
- â”£ ðŸ“‚meta  
- â”ƒ â”— ðŸ“œmain.yml  
- â”£ ðŸ“‚molecule  
- â”ƒ â”— ðŸ“‚default  
- â”ƒ   â”£ ðŸ“œconverge.yml  
- â”ƒ   â”£ ðŸ“œcreate.yml  
- â”ƒ   â”£ ðŸ“œdestroy.yml  
- â”ƒ   â”— ðŸ“œmolecule.yml  
- â”£ ðŸ“‚tasks  
- â”ƒ â”— ðŸ“œmain.yml  
- â”£ ðŸ“‚templates  
- â”£ ðŸ“‚tests  
- â”ƒ â”£ ðŸ“œinventory  
- â”ƒ â”— ðŸ“œtest.yml  
- â”£ ðŸ“‚vars  
- â”ƒ â”— ðŸ“œmain.yml  
- â”— ðŸ“œREADME.md
+📦sample_role  
+ ┣ 📂defaults  
+ ┃ ┗ 📜main.yml  
+ ┣ 📂files  
+ ┣ 📂handlers  
+ ┃ ┗ 📜main.yml  
+ ┣ 📂meta  
+ ┃ ┗ 📜main.yml  
+ ┣ 📂molecule  
+ ┃ ┗ 📂default  
+ ┃   ┣ 📜converge.yml  
+ ┃   ┣ 📜create.yml  
+ ┃   ┣ 📜destroy.yml  
+ ┃   ┗ 📜molecule.yml  
+ ┣ 📂tasks  
+ ┃ ┗ 📜main.yml  
+ ┣ 📂templates  
+ ┣ 📂tests  
+ ┃ ┣ 📜inventory  
+ ┃ ┗ 📜test.yml  
+ ┣ 📂vars  
+ ┃ ┗ 📜main.yml  
+ ┗ 📜README.md
 ```
 
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)

@@ -8,7 +8,7 @@ import yaml
 # TODO implement pre commit hook that enforces an empty line at the end of each file
 
 
-# TODO make it run from src directory right away - doesn't work for worhflow file so far
+# TODO make it run from src directory right away - doesn't work for workflow file so far
 script_dir: Path = Path(__file__).resolve().parent
 root_dir: Path = script_dir.parent
 
@@ -28,11 +28,11 @@ step_to_code_map:dict[str, str] = code_block.map_step_name_to_code(
 
 md = MarkdownIt()
 
-md_content: str = file.read_file(input_file)
+md_content: str = file.read_file(str(input_file))
 tokens: list[Token] = md.parse(md_content)
 code_map_list: list[code_block.CodeMap] = code_block.map_reference_to_source(workflow_path=workflow_path, tokens=tokens, step_to_code_map=step_to_code_map)
 export_content: str = code_block.update_text(md_content, code_map_list)
 for admonition in admonition.admonitions:
     export_content: str = export_content.replace(admonition.obsidian, admonition.devto)
 
-file.write_file(output_file, export_content)
+file.write_file(file_path=str(output_file), content=export_content)

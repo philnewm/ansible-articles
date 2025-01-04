@@ -31,7 +31,7 @@ def code_ref_meta_workflow(tmp_path: Path) -> code_block.CodeReferenceMeta:
     )
 
 
-def test_map_step_name_to_code(test_workflow: dict[str, dict]) -> None:
+def test_map_step_name_to_code(test_workflow: dict[str, dict[str, str]]) -> None:
     """
     Given a test dictionary resambling a github workflow script.
     When running the map conversion

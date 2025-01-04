@@ -25,7 +25,7 @@ class CodeReferenceMeta(NamedTuple):
 
 
 def map_step_name_to_code(
-    gh_workflow: dict[str, dict], job_name: str
+    gh_workflow: dict[str, dict[str, str]], job_name: str
 ) -> dict[str, str]:
     """Convert a Github Actions job dictionary to a step to code dictionary.
 
@@ -86,7 +86,7 @@ def get_reference_values(token: Token) -> CodeReferenceMeta:
 
 def map_reference_to_source(
     workflow_path: Path, tokens: list[Token], step_to_code_map: dict[str, str]
-) -> list[NamedTuple]:
+) -> list[CodeMap]:
     """Map the code references to the source code they point to.
 
     Args:
@@ -97,14 +97,14 @@ def map_reference_to_source(
         list[CodeMap]: List of code mappings
     """
 
-    code_map_list: list[NamedTuple] = []
+    code_map_list: list[CodeMap] = []
 
     # ToDo Implement blog dataclass to hold information like ttitle, tags and so on
 
     for token in tokens:
         if token.type == "fence" and token.info == "reference":
             ref_meta: CodeReferenceMeta = get_reference_values(token=token)
-            source_code: str = file.read_file(ref_meta.file_path)
+            source_code: str = file.read_file(file_path=str(ref_meta.file_path))
 
             if ref_meta.file_path.name in workflow_paths:
                 snippet_name: str = parse_workflow_code(
