@@ -705,11 +705,11 @@ See the following table for download pages and version used for the following ex
 </div>
 </div>
 </div>
-<p>Verify the successful installation of both tools by checking their version.
+<p>Verify the successful installation of both tools by checking their version.</p>
 <div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
 <span class="normal"><a href="#__codelineno-6-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a>VBoxManage<span class="w"> </span>--version
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a>vagrant<span class="w"> </span>--version
-</span></code></pre></div></td></tr></table></div></p>
+</span></code></pre></div></td></tr></table></div>
 <h2 id="prepare-development-environment">Prepare development environment</h2>
 <hr />
 <p>While I was trying to understand molecule I came across many guides mentioning the command <code>molecule role init</code>.
@@ -858,7 +858,7 @@ Line 4: @@TODO try to get rid of this line - requires removing debug formatting 
 Line 5: Now replace the molecule config file <code>molecule/default/molecule.yml</code> with the provided one which uses AlmaLinux9. - Get other vagrant boxes on <a href="https://portal.cloud.hashicorp.com/vagrant/discover/almalinux/9">vagrant cloud</a>
 Line 6: Same goes for the <code>converge.yml</code> playbook
 Line 7: Same goes for the <code>verify.yml</code> playbook</p>
-<p>Running <code>molecule ceate</code> and <code>molecule list</code> when it's done should now display a vagrant instance.</p>
+<p>Running <code>molecule create</code> and <code>molecule list</code> when it's done should now display a vagrant instance.</p>
 <h3 id="access-vagrant-instance">Access Vagrant Instance</h3>
 <p>Accessing an instance is supposed to be done by running <code>molecule login</code>, this is currently not working due to a <a href="https://github.com/ansible-community/molecule-plugins/issues/239">bug</a> and should be resolved with the next release.
 In the meantime you can run <code>vagrant global-status</code> to get the vagrant instance IDs and <code>vagrant ssh &lt;id&gt;</code> to log into one of the VMs displayed. Afterwards just type <code>exit</code> to drop out of the instance again.</p>
