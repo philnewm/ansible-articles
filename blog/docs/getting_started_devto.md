@@ -36,7 +36,7 @@ Additional the python-venv and python-pip package will be required.
 Here just the example install command for Ubuntu22.04
 `sudo apt-get install python3.10 python3.10-venv python3.10-pip`
 
-> [!tip] Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly recommended.
+> **🟢 Tip** - Creating a [python virtual environment](https://realpython.com/python-virtual-environments-a-primer/) for Ansible first is highly recommended.
 
 ```shell
 python3.10 -m venv ~/.venv/ansible_env
@@ -55,7 +55,7 @@ molecule-plugins[vagrant]
 docker==7.1.0
 ```
 
-> [!tip]- docker python packages
+> **🟢 Tip** -- docker python packages
 > Installing the docker python package is only necessary due to a bug [#32540](https://github.com/ansible/molecule/issues/2540) in molecule plugins.
 > A fix for this one is already merged, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166) but no new release happened so far.
 
@@ -189,7 +189,7 @@ Molecule stores all instance related data in a so called *ephermal directory* an
 It's placed at `~/.cache/molecule/<role-name>/<scenario-name>` by default and usually gets displayed during instance creation @@TODO check instance creation output. 
 Running `molecule reset` might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
 
-> [!warning]- Python traceback explanation for `molecule reset`
+> **⚠️ Warning** -- Python traceback explanation for `molecule reset`
 > Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
 > Happens e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
 ### Vagrant Instance
@@ -229,7 +229,7 @@ verifier:
 ```
 
 You can find some explanation of all these settings in the [Ansible molecule docs](https://ansible.readthedocs.io/projects/molecule/getting-started/#inspecting-the-moleculeyml)
-> [!info]- VirtualBox Network Setup
+> **ℹ️ Info** -- VirtualBox Network Setup
 > Assigning a network-interface using a `192.168.56.X` address is crucial here.
 > VirtualBox sets up two virtual networks  by default.
 >
