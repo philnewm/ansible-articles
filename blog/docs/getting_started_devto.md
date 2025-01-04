@@ -8,6 +8,7 @@ tags:
 # Getting started with Ansible Molecule
 
 ## Intro
+
 ---
 
 After reading through a bunch of Ansible molecule setup guides I noticed quite a bunch of them were outdated in at least one critical aspect. Will discuss the details of this in [Prepare development environment](#prepare-development-environment).
@@ -17,8 +18,11 @@ So this is a guide on setting up Ansible Molecule for testing Ansible roles by r
 The code in this guide was developed and tested on AlmaLinux9 and Ubuntu22.04 for the software versions mentioned in [Requirements](#requirements)
 
 @@TODO figure out rules for separator placement
+
 ## Requirements
+
 ---
+
 ### System
 
 Since we will use VirtualBox virtual Machines in this guide it's required for you system to have virtualization enabled in your Mainboards BIOS or UEFI.
@@ -105,12 +109,14 @@ sudo dnf install virtualbox-7.1 -y
 ~~~
 
 Verify the successful installation of both tools by checking their version.
+
 ```bash linenums="1"
 VBoxManage --version
 vagrant --version
 ```
 
 ## Prepare development environment
+
 ---
 
 While I was trying to understand molecule I came across many guides mentioning the command `molecule role init`.
@@ -126,35 +132,37 @@ For now we'll just go with the *default* scenario to keep it simple.
 Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
 ```code title="Role Structure"
-📦sample_role  
- ┣ 📂defaults  
- ┃ ┗ 📜main.yml  
- ┣ 📂files  
- ┣ 📂handlers  
- ┃ ┗ 📜main.yml  
- ┣ 📂meta  
- ┃ ┗ 📜main.yml  
- ┣ 📂molecule  
- ┃ ┗ 📂default  
- ┃   ┣ 📜converge.yml  
- ┃   ┣ 📜create.yml  
- ┃   ┣ 📜destroy.yml  
- ┃   ┗ 📜molecule.yml  
- ┣ 📂tasks  
- ┃ ┗ 📜main.yml  
- ┣ 📂templates  
- ┣ 📂tests  
- ┃ ┣ 📜inventory  
- ┃ ┗ 📜test.yml  
- ┣ 📂vars  
- ┃ ┗ 📜main.yml  
+📦sample_role
+ ┣ 📂defaults
+ ┃ ┗ 📜main.yml
+ ┣ 📂files
+ ┣ 📂handlers
+ ┃ ┗ 📜main.yml
+ ┣ 📂meta
+ ┃ ┗ 📜main.yml
+ ┣ 📂molecule
+ ┃ ┗ 📂default
+ ┃   ┣ 📜converge.yml
+ ┃   ┣ 📜create.yml
+ ┃   ┣ 📜destroy.yml
+ ┃   ┗ 📜molecule.yml
+ ┣ 📂tasks
+ ┃ ┗ 📜main.yml
+ ┣ 📂templates
+ ┣ 📂tests
+ ┃ ┣ 📜inventory
+ ┃ ┗ 📜test.yml
+ ┣ 📂vars
+ ┃ ┗ 📜main.yml
  ┗ 📜README.md
 ```
 
 For details about how each file and directory inside this role structure is supposed to be used see the [Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-directory-structure)
 
 ## Instance Creation
+
 ---
+
 ### Default Instance
 
 Creating a molecule instance is done by running `molecule create` if you do that right away from the roles root directory you will most likely encounter the following error:
@@ -185,6 +193,7 @@ If you run `molecule drivers` you should see a list of installed drivers includi
 Take a look at the [molecule-plugins repository](https://github.com/ansible-community/molecule-plugins/blob/main/README.md) for additional information
 
 ### Cleaning up
+
 Molecule stores all instance related data in a so called *ephermal directory* and removes it when running `molecule reset`.
 It's placed at `~/.cache/molecule/<role-name>/<scenario-name>` by default and usually gets displayed during instance creation @@TODO check instance creation output. 
 Running `molecule reset` might result in a python-traceback related to docker on RHEL-systems but will still work and remove the directory as expected.
@@ -192,6 +201,7 @@ Running `molecule reset` might result in a python-traceback related to docker on
 > **⚠️ Warning** -- Python traceback explanation for `molecule reset`
 > Indicates docker and or the python module isn't installed on your system, see [#166](https://github.com/ansible-community/molecule-plugins/issues/166)
 > Happens e.g. on Almalinux 9 due to podman being the default container service instead of docker and molecule doesn't seem to like this.
+
 ### Vagrant Instance
 
 ```yaml
@@ -259,7 +269,7 @@ Line 5: Now replace the molecule config file `molecule/default/molecule.yml` wit
 Line 6: Same goes for the `converge.yml` playbook
 Line 7: Same goes for the `verify.yml` playbook
 
-Running `molecule ceate` and `molecule list` when it's done should now display a vagrant instance.
+Running `molecule create` and `molecule list` when it's done should now display a vagrant instance.
 
 ### Access Vagrant Instance
 
@@ -267,7 +277,9 @@ Accessing an instance is supposed to be done by running `molecule login`, this i
 In the meantime you can run `vagrant global-status` to get the vagrant instance IDs and `vagrant ssh <id>` to log into one of the VMs displayed. Afterwards just type `exit` to drop out of the instance again.
 
 ## Provision a service
+
 ---
+
 After setting up this vagrant instance successfully it is now time to make it do something using Ansible as its provisioner. We will use these tasks so set up an Apache web-server.
 This is just a very basic example for demonstration.
 
@@ -327,6 +339,7 @@ After this ran successfully you should be able to just copy the IP address displ
 Even tho this is nice, testing the functionality of this web-server manually isn't quite a scalable approach. It's time to set up automated testing for this role.
 
 ## Test Vagrant Instance
+
 ---
 
 We will use [Ansible for testing](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.ansible.Ansible) as well to stay with the default and to keep it simple. Another popular option for molecule testing is [testinfra](https://ansible.readthedocs.io/projects/molecule/configuration/?h=#molecule.verifier.testinfra.Testinfra)
@@ -374,4 +387,5 @@ Place these tasks into a file called `tests.yml` in the tasks directory to make 
 Now you should be able to run `molecule verify` to have these tests run against the VM.
 
 ## Vagrant
+
 Explain what gets saved where and how does the ephemeral directory work
