@@ -1,6 +1,6 @@
 ---
 
-name: Start GitHub-Pages Deployment
+name: Prepare GitHub-Pages Deployment
 
 on:
   workflow_run:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  deploy:
+  prepare-deployment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo

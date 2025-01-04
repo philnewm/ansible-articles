@@ -144,28 +144,28 @@ For now we'll just go with the *default* scenario to keep it simple.
 Now you got a "molecule" directory inside the role containing a bunch of default .yml files.
 
 ```code title="Role Structure"
-📦sample_role  
- ┣ 📂defaults  
- ┃ ┗ 📜main.yml  
- ┣ 📂files  
- ┣ 📂handlers  
- ┃ ┗ 📜main.yml  
- ┣ 📂meta  
- ┃ ┗ 📜main.yml  
- ┣ 📂molecule  
- ┃ ┗ 📂default  
- ┃   ┣ 📜converge.yml  
- ┃   ┣ 📜create.yml  
- ┃   ┣ 📜destroy.yml  
- ┃   ┗ 📜molecule.yml  
- ┣ 📂tasks  
- ┃ ┗ 📜main.yml  
- ┣ 📂templates  
- ┣ 📂tests  
- ┃ ┣ 📜inventory  
- ┃ ┗ 📜test.yml  
- ┣ 📂vars  
- ┃ ┗ 📜main.yml  
+📦sample_role
+ ┣ 📂defaults
+ ┃ ┗ 📜main.yml
+ ┣ 📂files
+ ┣ 📂handlers
+ ┃ ┗ 📜main.yml
+ ┣ 📂meta
+ ┃ ┗ 📜main.yml
+ ┣ 📂molecule
+ ┃ ┗ 📂default
+ ┃   ┣ 📜converge.yml
+ ┃   ┣ 📜create.yml
+ ┃   ┣ 📜destroy.yml
+ ┃   ┗ 📜molecule.yml
+ ┣ 📂tasks
+ ┃ ┗ 📜main.yml
+ ┣ 📂templates
+ ┣ 📂tests
+ ┃ ┣ 📜inventory
+ ┃ ┗ 📜test.yml
+ ┣ 📂vars
+ ┃ ┗ 📜main.yml
  ┗ 📜README.md
 ```
 

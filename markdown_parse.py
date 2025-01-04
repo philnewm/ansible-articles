@@ -34,6 +34,7 @@ code_map_list: list[code_block.CodeMap] = code_block.map_reference_to_source(
     )
 export_content: str = code_block.update_text(md_content, code_map_list)
 
+# write updated markdown file
 output_file_ghpages.write_text(export_content)
 
 for admonition in admonition.admonitions:
