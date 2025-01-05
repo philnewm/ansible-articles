@@ -1,0 +1,14 @@
+{
+	"nodes":[
+		{"id":"ae76b4c6ac065679","x":100,"y":-380,"width":260,"height":210,"color":"2","type":"text","text":"**philnewm/philnewm**\n\n* Blog-Repo\n* gh-pages branch for website\n* Runs deployment to GitHub-Pages"},
+		{"id":"5463b1b71c40966e","x":20,"y":0,"width":420,"height":160,"color":"6","type":"text","text":"**philnewm/markdown-conversion**\n\n* Dedicated GitHub action\n* Converts file references to actual code\n* Converts admonitions for other sites"},
+		{"id":"4d2bc71bb72a5656","x":-580,"y":-200,"width":280,"height":240,"color":"6","type":"text","text":"**philnewm/blogs**\n\n* Dedicated Repo to store blogs\n* Contain WiP and production ones?"},
+		{"id":"9a27e8523a53e423","x":-400,"y":-525,"width":305,"height":250,"color":"5","type":"text","text":"**Questions**\n\n* Should the Blogs stay right in the pages Repo?\n* How to know when new Blog is ready?\n* How to include new blogs into the deployment"},
+		{"id":"8717bf11b6a6fc47","x":-572,"y":140,"width":265,"height":240,"color":"6","type":"text","text":"philnewm/notes\n\n* General purpose note repo\n* Available online\n* Backed by git version control\n* May be private"}
+	],
+	"edges":[
+		{"id":"0398750a62a4e0ee","fromNode":"5463b1b71c40966e","fromSide":"top","toNode":"ae76b4c6ac065679","toSide":"bottom"},
+		{"id":"cbb31eea6110df90","fromNode":"4d2bc71bb72a5656","fromSide":"right","toNode":"ae76b4c6ac065679","toSide":"left"},
+		{"id":"e0167c45c06284a7","fromNode":"8717bf11b6a6fc47","fromSide":"top","toNode":"4d2bc71bb72a5656","toSide":"bottom"}
+	]
+}
